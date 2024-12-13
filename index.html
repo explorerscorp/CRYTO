@@ -3,119 +3,216 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro y Calculadora de Criptomonedas By Rev24</title>
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <title>Registro de Criptomonedas</title>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jQuery y Bootstrap JS para el Modal -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
-
         body {
-            font-family: 'Orbitron', sans-serif;
-            background: linear-gradient(135deg, #1f1f2e, #3a3a5c);
-            color: #e1e1ff;
-            padding: 18px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #a8d5ba, #f5f3e5);
+            color: #4b3832;
+            padding: 20px;
             overflow-x: hidden;
         }
         .container {
-            margin-top: 20px;
-            background: rgba(50, 50, 80, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            border: 2px solid #4b3832;
+            box-shadow: 0 0 25px rgba(75, 56, 50, 0.3);
             padding: 20px;
+            max-width: 1200px;
+            margin: auto;
         }
         h2, h3 {
             text-align: center;
-            font-size: 0.8rem;
-            color: #00e0ff;
-            text-shadow: 0 0 10px #00e0ff;
+            font-size: 1rem;
+            color: #6b8e23;
+            text-shadow: 0 0 5px #6b8e23;
+            margin-bottom: 20px;
         }
         .form-group label {
             font-size: 0.8rem;
-            color: #e1e1ff;
+            color: #4b3832;
         }
         .form-group input, .form-group select {
-            font-size: 0.8rem;
-            padding: 7px;
-            border: 1px solid #00e0ff;
-            background: rgba(30, 30, 50, 0.8);
-            color: #e1e1ff;
+            font-size: 1rem;
+            padding: 8px;
+            border: 1px solid #6b8e23;
+            background: rgba(245, 243, 229, 0.8);
+            color: #4b3832;
             border-radius: 5px;
         }
         .form-group input:focus, .form-group select:focus {
             outline: none;
-            border-color: #ff00ff;
-            box-shadow: 0 0 10px #ff00ff;
+            border-color: #8fbc8f;
+            box-shadow: 0 0 10px #8fbc8f;
         }
         .btn {
-            font-size: 1rem;
+            font-size: 0.8rem;
             width: 100%;
             margin-bottom: 10px;
             border: none;
             border-radius: 5px;
-            background: linear-gradient(135deg, #00e0ff, #ff00ff);
-            color: #1f1f2e;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-            transition: transform 0.2s ease-in-out;
+            background: #6b8e23;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(107, 142, 35, 0.5);
+            transition: transform 0.2s ease-in-out, background 0.2s ease-in-out;
         }
         .btn:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.8);
+            background: #556b2f;
+            box-shadow: 0 0 15px rgba(85, 107, 47, 0.8);
         }
         table {
-            margin-top: 20px;
-            font-size: 0.8rem;
-            background: rgba(243, 243, 243, 0.9);
+            margin-top: 15px;
+            font-size: 1rem;
+            background: rgba(245, 243, 229, 0.95);
             border-radius: 10px;
             overflow: hidden;
-            color: #00ff00;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+            color: #4b3832;
+            border: 1px solid #6b8e23;
+            box-shadow: 0 0 15px rgba(75, 56, 50, 0.3);
         }
         th, td {
             text-align: center;
-            padding: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border: 1px solid #6b8e23;
         }
         th {
-            background: rgba(182, 204, 218, 0.9);
-            color: #0059ff;
-            text-shadow: 0 0 10px #ff00ff;
+            background: #8fbc8f;
+            color: #fff;
+            text-shadow: 0 0 5px #6b8e23;
         }
         tr:nth-child(even) {
-            background: rgba(202, 216, 79, 0.9);
+            background: #e6ffe6;
         }
         .total-gain {
-            font-size: 1.1rem;
+            font-size: 2rem;
             font-weight: bold;
-            margin: 20px 0;
-            color: #00ff00;
-            text-shadow: 0 0 10px #00ff00;
+            margin: 30px 0;
+            text-shadow: 0 0 5px #2e8b57;
             text-align: center;
+        }
+        .profit {
+            color: #0000FF; /* Azul para ganancias */
+        }
+        .loss {
+            color: #FF0000; /* Rojo para pérdidas */
         }
         .sell-options {
             display: flex;
-            justify-content: space-around;
-            margin-bottom: 10px;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-bottom: 15px;
         }
         .sell-options button {
             font-size: 1rem;
-            flex: 1;
-            margin: 0 5px;
-            background: rgba(30, 30, 50, 0.9);
-            color: #00e0ff;
-            border: 1px solid #00e0ff;
+            flex: 1 1 48%;
+            margin: 5px 0;
+            background: #f0e68c;
+            color: #4b3832;
+            border: 1px solid #6b8e23;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(107, 142, 35, 0.3);
+            transition: background 0.2s ease-in-out, color 0.2s ease-in-out;
         }
         .sell-options button:hover {
-            background: #00e0ff;
-            color: #1f1f2e;
+            background: #6b8e23;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(107, 142, 35, 0.6);
+        }
+        canvas {
+            max-width: 100%;
+            height: auto !important;
+        }
+        .calculator-container {
+            margin-top: 40px;
+        }
+        .calculator-container .container {
+            padding: 20px;
+            border: 2px solid #4b3832;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(75, 56, 50, 0.3);
+            background: rgba(255, 255, 255, 0.95);
+        }
+        .calculator-container h3 {
+            color: #ff5733;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+        .calculator-container input[type="number"] {
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-top: 8px;
+            background-color: rgba(240, 240, 240, 1);
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .calculator-container input[type="number"]:focus {
+            background-color: rgba(255, 255, 200, 1);
+            transform: scale(1.05);
+            border-color: #ff5733;
+        }
+        .calculator-container .result {
+            margin-top: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #28a745;
+            text-align: center;
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid #28a745;
+            border-radius: 10px;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .calculator-container .error {
+            color: #c82333;
+            font-size: 1rem;
+            text-align: center;
+            margin-top: 15px;
+            background-color: rgba(255, 230, 230, 1);
+            padding: 10px;
+            border-radius: 10px;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
         @media (max-width: 768px) {
-            h2 {
+            h2, h3 {
                 font-size: 1.5rem;
             }
             .form-group input, .form-group select, .btn {
-                font-size: 1rem;
-                padding: 8px;
+                font-size: 1.1rem;
+                padding: 12px;
             }
             table {
+                font-size: 0.9rem;
+            }
+            .sell-options button {
+                flex: 1 1 100%;
+            }
+            .total-gain {
+                font-size: 2rem;
+            }
+            .calculator-container h3 {
+                font-size: 1.3rem;
+            }
+            .calculator-container input[type="number"] {
+                font-size: 1rem;
+            }
+            .calculator-container .result {
+                font-size: 1.2rem;
+            }
+            .calculator-container .error {
                 font-size: 0.9rem;
             }
         }
@@ -125,104 +222,254 @@
     <div class="container">
         <h2>Registro de Compras y Ventas de Criptomonedas</h2>
 
-        <!-- Formulario de Compra -->
-        <div class="form-group">
-            <label for="cryptoSelect">Selecciona una Criptomoneda:</label>
-            <select id="cryptoSelect" class="form-control">
-                <option value="SOL">SOL</option>
-                <option value="BTC">BTC</option>
-                <option value="ETH">ETH</option>
-                <option value="FTM">FTM</option>
-                <option value="XRP">XRP</option>
-                <option value="ADA">ADA</option>
-                <option value="DOGE">DOGE</option>
-                <option value="BNB">BNB</option>
-                <option value="PEPE">PEPE</option>
-                <option value="SHIBA">SHIBA</option>
-                <option value="SUI">SUI</option>
-                <option value="RAY">RAY</option>
-                <option value="TETHA">THETA</option>
-                <option value="HBAR">HBAR</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="buyPrice">Precio de Compra:</label>
-            <input type="number" id="buyPrice" class="form-control" placeholder="Precio de compra" required min="0.01" step="0.01">
-        </div>
-        <div class="form-group">
-            <label for="buyAmount">Cantidad:</label>
-            <input type="number" id="buyAmount" class="form-control" placeholder="Cantidad" required min="0.01" step="0.01">
-        </div>
-        <button id="buyButton" class="btn">Registrar Compra</button>
+        <!-- Formulario de Compra y Venta en Rejilla -->
+        <div class="row">
+            <!-- Formulario de Compra -->
+            <div class="col-md-6">
+                <h3>Registrar Compra</h3>
+                <div class="form-group">
+                    <label for="cryptoSelect">Selecciona una Criptomoneda:</label>
+                    <select id="cryptoSelect" class="form-control">
+                        <option value="SOL">SOL</option>
+                        <option value="BTC">BTC</option>
+                        <option value="ETH">ETH</option>
+                        <option value="FTM">FTM</option>
+                        <option value="XRP">XRP</option>
+                        <option value="ADA">ADA</option>
+                        <option value="DOGE">DOGE</option>
+                        <option value="BNB">BNB</option>
+                        <option value="PEPE">PEPE</option>
+                        <option value="SHIBA">SHIBA</option>
+                        <option value="SUI">SUI</option>
+                        <option value="RAY">RAY</option>
+                        <option value="TETHA">THETA</option>
+                        <option value="HBAR">HBAR</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="buyPrice">Precio de Compra (USD):</label>
+                    <input type="number" id="buyPrice" class="form-control" placeholder="Ejemplo: 30000" required min="0.01" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="buyAmount">Cantidad Comprada:</label>
+                    <input type="number" id="buyAmount" class="form-control" placeholder="Ejemplo: 0.5" required min="0.0001" step="0.0001">
+                </div>
+                <button id="buyButton" class="btn">Registrar Compra</button>
+            </div>
 
-        <!-- Formulario de Venta -->
-        <div class="form-group">
-            <label for="sellSelect">Selecciona una Criptomoneda para Vender:</label>
-            <select id="sellSelect" class="form-control"></select>
+            <!-- Formulario de Venta -->
+            <div class="col-md-6">
+                <h3>Registrar Venta</h3>
+                <div class="form-group">
+                    <label for="sellSelect">Selecciona una Criptomoneda para Vender:</label>
+                    <select id="sellSelect" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <label for="sellPrice">Precio de Venta (USD):</label>
+                    <input type="number" id="sellPrice" class="form-control" placeholder="Ejemplo: 40000" required min="0.01" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label for="sellAmount">Cantidad a Vender:</label>
+                    <input type="number" id="sellAmount" class="form-control" placeholder="Cantidad a vender" required min="0.01" step="0.01">
+                </div>
+                <div class="sell-options">
+                    <button class="btn" onclick="setSellPercentage(5)">5%</button>
+                    <button class="btn" onclick="setSellPercentage(10)">10%</button>
+                    <button class="btn" onclick="setSellPercentage(25)">25%</button>
+                    <button class="btn" onclick="setSellPercentage(50)">50%</button>
+                    <button class="btn" onclick="setSellPercentage(100)">100%</button>
+                </div>
+                <button id="sellButton" class="btn">Registrar Venta</button>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="sellPrice">Precio de Venta:</label>
-            <input type="number" id="sellPrice" class="form-control" placeholder="Precio de venta" required min="0.01" step="0.01">
-        </div>
-        <div class="form-group">
-            <label for="sellAmount">Cantidad a Vender:</label>
-            <input type="number" id="sellAmount" class="form-control" placeholder="Cantidad a vender" required min="0.01" step="0.01">
-        </div>
-        <div class="sell-options">
-            <button class="btn" onclick="setSellPercentage(5)">5%</button>
-            <button class="btn" onclick="setSellPercentage(10)">10%</button>
-            <button class="btn" onclick="setSellPercentage(25)">25%</button>
-            <button class="btn" onclick="setSellPercentage(50)">50%</button>
-            <button class="btn" onclick="setSellPercentage(100)">100%</button>
-        </div>
-        <button id="sellButton" class="btn">Registrar Venta</button>
 
         <!-- Ganancias Totales -->
         <div class="total-gain" id="totalGain">Ganancias Totales: $0</div>
 
+        <!-- Gráfico de Distribución del Portafolio -->
+        <h3>Distribución del Portafolio</h3>
+        <div class="row">
+            <div class="col-12">
+                <canvas id="portfolioChart" height="400"></canvas>
+            </div>
+        </div>
+
         <!-- Historial de Compras -->
         <h3>Historial de Compras</h3>
-        <table class="table table-bordered table-responsive-sm" id="purchaseTable">
-            <thead>
-                <tr>
-                    <th>Cripto</th>
-                    <th>Precio de Compra</th>
-                    <th>Cantidad</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-            <tbody id="purchaseBody"></tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-bordered" id="purchaseTable">
+                <thead>
+                    <tr>
+                        <th>Cripto</th>
+                        <th>Precio de Compra (USD)</th>
+                        <th>Cantidad</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody id="purchaseBody"></tbody>
+            </table>
+        </div>
 
         <!-- Historial de Ventas -->
         <h3>Historial de Ventas</h3>
-        <table class="table table-bordered table-responsive-sm" id="salesTable">
-            <thead>
-                <tr>
-                    <th>Cripto</th>
-                    <th>Precio de Venta</th>
-                    <th>Cantidad</th>
-                    <th>Ganancia</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-            <tbody id="salesBody"></tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-bordered" id="salesTable">
+                <thead>
+                    <tr>
+                        <th>Cripto</th>
+                        <th>Precio de Venta (USD)</th>
+                        <th>Cantidad</th>
+                        <th>Ganancia</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="salesBody"></tbody>
+            </table>
+        </div>
 
         <!-- Backup y Restauración -->
-        <button id="backupButton" class="btn">Backup</button>
-        <button id="restoreButton" class="btn">Restaurar</button>
-        <button id="resetButton" class="btn">Reiniciar Base de Datos</button>
+        <div class="row">
+            <div class="col-md-4 col-12 mb-2">
+                <button id="backupButton" class="btn">Backup</button>
+            </div>
+            <div class="col-md-4 col-12 mb-2">
+                <button id="restoreButton" class="btn">Restaurar</button>
+            </div>
+            <div class="col-md-4 col-12 mb-2">
+                <button id="resetButton" class="btn">Reiniciar Base de Datos</button>
+            </div>
+        </div>
+
+        <!-- Sección de Calculadora de Criptomonedas -->
+        <div class="calculator-container">
+            <div class="container">
+                <h3>Calculadora de Criptomonedas By Rev24</h3>
+
+                <div class="form-group">
+                    <label for="moneyAmountCalc">Monto Invertido (USD):</label>
+                    <input type="number" id="moneyAmountCalc" class="form-control" placeholder="Ejemplo: 1000" required oninput="calculateCoinsAndSetQuantityCalc()">
+                </div>
+
+                <div class="form-group">
+                    <label for="purchasePriceCalc">Precio de Compra (USD):</label>
+                    <input type="number" id="purchasePriceCalc" class="form-control" placeholder="Ejemplo: 30000" required oninput="calculateCoinsAndSetQuantityCalc()">
+                </div>
+
+                <div class="form-group">
+                    <label for="quantityCalc">Cantidad Comprada:</label>
+                    <input type="number" id="quantityCalc" class="form-control" placeholder="Calculado automáticamente" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label for="currentPriceCalc">Precio Actual (USD):</label>
+                    <input type="number" id="currentPriceCalc" class="form-control" placeholder="Ejemplo: 40000" required oninput="calculateProfitCalc()">
+                </div>
+
+                <div class="result" id="calcResult"></div>
+                <div class="error" id="calcError"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Editar Ventas -->
+    <div class="modal fade" id="editSaleModal" tabindex="-1" aria-labelledby="editSaleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="editSaleModalLabel">Editar Venta</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="editSaleForm">
+              <div class="modal-body">
+                  <input type="hidden" id="editSaleIndex">
+                  <div class="form-group">
+                      <label for="editSellPrice">Precio de Venta (USD):</label>
+                      <input type="number" id="editSellPrice" class="form-control" placeholder="Ejemplo: 40000" required min="0.01" step="0.01">
+                  </div>
+                  <div class="form-group">
+                      <label for="editSellAmount">Cantidad a Vender:</label>
+                      <input type="number" id="editSellAmount" class="form-control" placeholder="Ejemplo: 0.5" required min="0.01" step="0.01">
+                  </div>
+                  <div class="form-group">
+                      <label for="editSellCrypto">Criptomoneda:</label>
+                      <input type="text" id="editSellCrypto" class="form-control" readonly>
+                  </div>
+                  <div class="error" id="editError"></div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+              </div>
+          </form>
+        </div>
+      </div>
     </div>
 
     <script>
         const db = localStorage;
+        let portfolioChart = null;
 
         const clearFields = () => {
             document.getElementById('buyPrice').value = '';
             document.getElementById('buyAmount').value = '';
             document.getElementById('sellPrice').value = '';
             document.getElementById('sellAmount').value = '';
+        };
+
+        const updateChart = (cryptoLabels, cryptoAmounts) => {
+            const ctx = document.getElementById('portfolioChart').getContext('2d');
+
+            if (portfolioChart) {
+                portfolioChart.destroy();
+            }
+
+            portfolioChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: cryptoLabels,
+                    datasets: [{
+                        label: 'Distribución del Portafolio',
+                        data: cryptoAmounts,
+                        backgroundColor: [
+                            '#FF6384', '#36A2EB', '#FFCE56', '#ADFF2F', '#FFA07A',
+                            '#9370DB', '#00FA9A', '#6495ED', '#FFD700', '#D2691E',
+                            '#40E0D0', '#808000', '#FF69B4', '#8B0000'
+                        ],
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 20,
+                                padding: 15
+                            }
+                        },
+                        title: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || 0;
+                                    const total = context.chart._metasets[context.datasetIndex].total;
+                                    const percentage = ((value / total) * 100).toFixed(2);
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         };
 
         const updateTables = () => {
@@ -243,7 +490,7 @@
             const salesBody = document.getElementById('salesBody');
             salesBody.innerHTML = '';
             let totalGain = 0;
-            sales.forEach(sale => {
+            sales.forEach((sale, index) => {
                 totalGain += sale.gain;
                 const row = `<tr>
                     <td>${sale.crypto}</td>
@@ -251,11 +498,25 @@
                     <td>${sale.amount}</td>
                     <td>$${sale.gain.toFixed(2)}</td>
                     <td>${new Date(sale.date).toLocaleString()}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info edit-sale-btn" data-index="${index}">Editar</button>
+                    </td>
                 </tr>`;
                 salesBody.innerHTML += row;
             });
 
-            document.getElementById('totalGain').innerText = `Ganancias Totales: $${totalGain.toFixed(2)}`;
+            const totalGainElement = document.getElementById('totalGain');
+            totalGainElement.innerText = `Ganancias Totales: $${totalGain.toFixed(2)}`;
+
+            if (totalGain > 0) {
+                totalGainElement.classList.add('profit');
+                totalGainElement.classList.remove('loss');
+            } else if (totalGain < 0) {
+                totalGainElement.classList.add('loss');
+                totalGainElement.classList.remove('profit');
+            } else {
+                totalGainElement.classList.remove('profit', 'loss');
+            }
 
             const sellSelect = document.getElementById('sellSelect');
             sellSelect.innerHTML = '';
@@ -263,10 +524,22 @@
                 acc[p.crypto] = (acc[p.crypto] || 0) + p.amount;
                 return acc;
             }, {});
+
             Object.entries(uniqueCryptos).forEach(([crypto, amount]) => {
                 const option = `<option value="${crypto}">${crypto} (${amount.toFixed(2)})</option>`;
                 sellSelect.innerHTML += option;
             });
+
+            const cryptoLabels = Object.keys(uniqueCryptos);
+            const cryptoAmounts = Object.values(uniqueCryptos);
+            if (cryptoLabels.length > 0) {
+                updateChart(cryptoLabels, cryptoAmounts);
+            } else {
+                if (portfolioChart) {
+                    portfolioChart.destroy();
+                    portfolioChart = null;
+                }
+            }
         };
 
         const setSellPercentage = (percentage) => {
@@ -324,7 +597,11 @@
 
                     db.setItem('purchases', JSON.stringify(remainingPurchases));
 
-                    const gain = (price - purchases.find(p => p.crypto === crypto).price) * amount;
+                    const cryptoPurchases = purchases.filter(p => p.crypto === crypto);
+                    const totalSpent = cryptoPurchases.reduce((sum, p) => sum + p.price * p.amount, 0);
+                    const totalAmount = cryptoPurchases.reduce((sum, p) => sum + p.amount, 0);
+                    const averagePrice = totalAmount > 0 ? totalSpent / totalAmount : 0;
+                    const gain = (price - averagePrice) * amount;
 
                     const sales = JSON.parse(db.getItem('sales') || '[]');
                     sales.push({ crypto, price, amount, gain, date: new Date() });
@@ -346,7 +623,7 @@
                 purchases: JSON.parse(db.getItem('purchases') || '[]'),
                 sales: JSON.parse(db.getItem('sales') || '[]')
             };
-            const backupBlob = new Blob([JSON.stringify(backupData)], { type: 'application/json' });
+            const backupBlob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
             const backupLink = document.createElement('a');
             backupLink.href = URL.createObjectURL(backupBlob);
             backupLink.download = 'backup.json';
@@ -361,28 +638,203 @@
 
             fileInput.addEventListener('change', (e) => {
                 const file = e.target.files[0];
+                if (!file) {
+                    alert('No se seleccionó ningún archivo.');
+                    return;
+                }
                 const reader = new FileReader();
                 reader.readAsText(file);
 
                 reader.onload = () => {
-                    const restoredData = JSON.parse(reader.result);
-                    db.setItem('purchases', JSON.stringify(restoredData.purchases));
-                    db.setItem('sales', JSON.stringify(restoredData.sales));
-                    alert('Datos restaurados con éxito');
-                    updateTables();
+                    try {
+                        const restoredData = JSON.parse(reader.result);
+                        if (restoredData.purchases && restoredData.sales) {
+                            db.setItem('purchases', JSON.stringify(restoredData.purchases));
+                            db.setItem('sales', JSON.stringify(restoredData.sales));
+                            alert('Datos restaurados con éxito');
+                            updateTables();
+                        } else {
+                            alert('El archivo no tiene el formato correcto.');
+                        }
+                    } catch (error) {
+                        alert('Error al restaurar los datos: ' + error.message);
+                    }
+                };
+
+                reader.onerror = () => {
+                    alert('Error al leer el archivo.');
                 };
             });
         });
 
         document.getElementById('resetButton').addEventListener('click', () => {
-            if (confirm('¿Estás seguro de que deseas reiniciar la base de datos?')) {
+            if (confirm('¿Estás seguro de que deseas reiniciar la base de datos? Esta acción no se puede deshacer.')) {
                 db.clear();
                 alert('Base de datos reiniciada');
                 updateTables();
             }
         });
 
-        updateTables();
+        window.onload = updateTables;
+
+        /* Funciones de la Calculadora de Criptomonedas */
+
+        function calculateCoinsAndSetQuantityCalc() {
+            const moneyAmount = parseFloat(document.getElementById('moneyAmountCalc').value);
+            const purchasePrice = parseFloat(document.getElementById('purchasePriceCalc').value);
+
+            const errorDiv = document.getElementById('calcError');
+            const quantityInput = document.getElementById('quantityCalc');
+
+            errorDiv.style.display = 'none';
+            quantityInput.value = '';
+
+            if (isNaN(moneyAmount) || isNaN(purchasePrice) || moneyAmount <= 0 || purchasePrice <= 0) {
+                errorDiv.innerText = 'Por favor, ingrese valores válidos en Monto de Dinero y Precio de Compra.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            const coinsCanBuy = moneyAmount / purchasePrice;
+            quantityInput.value = coinsCanBuy.toFixed(3);
+
+            calculateProfitCalc();
+        }
+
+        function calculateProfitCalc() {
+            const purchasePrice = parseFloat(document.getElementById('purchasePriceCalc').value);
+            const quantity = parseFloat(document.getElementById('quantityCalc').value);
+            const currentPrice = parseFloat(document.getElementById('currentPriceCalc').value);
+
+            const errorDiv = document.getElementById('calcError');
+            const resultDiv = document.getElementById('calcResult');
+
+            errorDiv.style.display = 'none';
+            resultDiv.style.display = 'none';
+
+            if (isNaN(purchasePrice) || isNaN(quantity) || isNaN(currentPrice) || quantity <= 0) {
+                if (!isNaN(currentPrice)) {
+                    errorDiv.innerText = 'Por favor, ingrese valores válidos en todos los campos necesarios.';
+                    errorDiv.style.display = 'block';
+                }
+                return;
+            }
+
+            const totalPurchase = purchasePrice * quantity;
+            const totalCurrentValue = currentPrice * quantity;
+            const profit = totalCurrentValue - totalPurchase;
+
+            resultDiv.style.display = 'block';
+            resultDiv.innerText = `Ganancia Total: $${profit.toFixed(2)}`;
+
+            if (profit > 0) {
+                resultDiv.style.color = '#0000FF'; // Azul para ganancia
+            } else if (profit < 0) {
+                resultDiv.style.color = '#FF0000'; // Rojo para pérdida
+            } else {
+                resultDiv.style.color = '#333'; // Color neutro
+            }
+        }
+
+        /* Funciones para Editar Ventas */
+
+        document.getElementById('salesBody').addEventListener('click', function(event) {
+            if (event.target && event.target.matches('button.edit-sale-btn')) {
+                const saleIndex = event.target.getAttribute('data-index');
+                openEditSaleModal(saleIndex);
+            }
+        });
+
+        function openEditSaleModal(index) {
+            const sales = JSON.parse(db.getItem('sales') || '[]');
+            const sale = sales[index];
+
+            if (!sale) {
+                alert('Venta no encontrada.');
+                return;
+            }
+
+            document.getElementById('editSaleIndex').value = index;
+            document.getElementById('editSellPrice').value = sale.price.toFixed(2);
+            document.getElementById('editSellAmount').value = sale.amount.toFixed(3);
+            document.getElementById('editSellCrypto').value = sale.crypto;
+
+            $('#editSaleModal').modal('show');
+        }
+
+        document.getElementById('editSaleForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const index = parseInt(document.getElementById('editSaleIndex').value);
+            const newPrice = parseFloat(document.getElementById('editSellPrice').value);
+            const newAmount = parseFloat(document.getElementById('editSellAmount').value);
+            const crypto = document.getElementById('editSellCrypto').value;
+
+            const errorDiv = document.getElementById('editError');
+            errorDiv.innerText = '';
+            errorDiv.style.display = 'none';
+
+            if (isNaN(newPrice) || newPrice <= 0 || isNaN(newAmount) || newAmount <= 0) {
+                errorDiv.innerText = 'Por favor, ingresa valores válidos para Precio de Venta y Cantidad.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            const sales = JSON.parse(db.getItem('sales') || '[]');
+            const originalSale = sales[index];
+
+            if (!originalSale) {
+                alert('Venta no encontrada.');
+                $('#editSaleModal').modal('hide');
+                return;
+            }
+
+            const amountDifference = newAmount - originalSale.amount;
+
+            if (amountDifference > 0) {
+                const purchases = JSON.parse(db.getItem('purchases') || '[]');
+                const totalCrypto = purchases.filter(p => p.crypto === crypto).reduce((sum, p) => sum + p.amount, 0);
+                if (amountDifference > totalCrypto) {
+                    errorDiv.innerText = 'No tienes suficiente cantidad para aumentar la venta.';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+
+                let remainingAmount = amountDifference;
+                const updatedPurchases = [];
+                for (let i = 0; i < purchases.length; i++) {
+                    const purchase = purchases[i];
+                    if (purchase.crypto === crypto && remainingAmount > 0) {
+                        const usedAmount = Math.min(remainingAmount, purchase.amount);
+                        purchase.amount -= usedAmount;
+                        remainingAmount -= usedAmount;
+                        if (purchase.amount > 0) {
+                            updatedPurchases.push(purchase);
+                        }
+                    } else {
+                        updatedPurchases.push(purchase);
+                    }
+                }
+                db.setItem('purchases', JSON.stringify(updatedPurchases));
+            } else if (amountDifference < 0) {
+                let remainingAmount = Math.abs(amountDifference);
+                const purchases = JSON.parse(db.getItem('purchases') || '[]');
+                purchases.push({ crypto, price: originalSale.price, amount: remainingAmount, date: new Date() });
+                db.setItem('purchases', JSON.stringify(purchases));
+            }
+
+            sales[index].price = newPrice;
+            sales[index].amount = newAmount;
+
+            const averagePrice = originalSale.gain / originalSale.amount + originalSale.price;
+            sales[index].gain = (newPrice - averagePrice) * newAmount;
+
+            db.setItem('sales', JSON.stringify(sales));
+
+            alert('Venta modificada con éxito.');
+            $('#editSaleModal').modal('hide');
+            updateTables();
+        });
     </script>
 </body>
 </html>
