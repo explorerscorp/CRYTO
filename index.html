@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -7,55 +6,117 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <title>Registro de Criptomonedas</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            padding: 10px;
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(135deg, #1f1f2e, #3a3a5c);
+            color: #e1e1ff;
+            padding: 18px;
+            overflow-x: hidden;
         }
         .container {
             margin-top: 20px;
+            background: rgba(50, 50, 80, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            padding: 20px;
         }
-        h2 {
+        h2, h3 {
             text-align: center;
-            font-size: 1.5rem;
+            font-size: 0.8rem;
+            color: #00e0ff;
+            text-shadow: 0 0 10px #00e0ff;
         }
         .form-group label {
-            font-size: 1rem;
+            font-size: 0.8rem;
+            color: #e1e1ff;
         }
         .form-group input, .form-group select {
-            font-size: 1rem;
-            padding: 10px;
+            font-size: 0.8rem;
+            padding: 7px;
+            border: 1px solid #00e0ff;
+            background: rgba(30, 30, 50, 0.8);
+            color: #e1e1ff;
+            border-radius: 5px;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #ff00ff;
+            box-shadow: 0 0 10px #ff00ff;
         }
         .btn {
-            font-size: 1.2rem;
+            font-size: 1rem;
             width: 100%;
             margin-bottom: 10px;
+            border: none;
+            border-radius: 5px;
+            background: linear-gradient(135deg, #00e0ff, #ff00ff);
+            color: #1f1f2e;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            transition: transform 0.2s ease-in-out;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.8);
         }
         table {
             margin-top: 20px;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
+            background: rgba(243, 243, 243, 0.9);
+            border-radius: 10px;
+            overflow: hidden;
+            color: #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
         }
         th, td {
             text-align: center;
-            padding: 5px;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        th {
+            background: rgba(182, 204, 218, 0.9);
+            color: #0059ff;
+            text-shadow: 0 0 10px #ff00ff;
+        }
+        tr:nth-child(even) {
+            background: rgba(202, 216, 79, 0.9);
         }
         .total-gain {
-            font-size: 1.5rem;
+            font-size: 1.1rem;
             font-weight: bold;
             margin: 20px 0;
-            color: #28a745;
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
             text-align: center;
+        }
+        .sell-options {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 10px;
+        }
+        .sell-options button {
+            font-size: 1rem;
+            flex: 1;
+            margin: 0 5px;
+            background: rgba(30, 30, 50, 0.9);
+            color: #00e0ff;
+            border: 1px solid #00e0ff;
+        }
+        .sell-options button:hover {
+            background: #00e0ff;
+            color: #1f1f2e;
         }
         @media (max-width: 768px) {
             h2 {
-                font-size: 1.25rem;
+                font-size: 1.5rem;
             }
             .form-group input, .form-group select, .btn {
                 font-size: 1rem;
                 padding: 8px;
             }
             table {
-                font-size: 0.8rem;
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -64,23 +125,24 @@
     <div class="container">
         <h2>Registro de Compras y Ventas de Criptomonedas</h2>
 
-        <!-- Registro de Compra -->
+        <!-- Formulario de Compra -->
         <div class="form-group">
             <label for="cryptoSelect">Selecciona una Criptomoneda:</label>
             <select id="cryptoSelect" class="form-control">
                 <option value="SOL">SOL</option>
                 <option value="BTC">BTC</option>
                 <option value="ETH">ETH</option>
-                <option value="SUI">SUI</option>
+                <option value="FTM">FTM</option>
                 <option value="XRP">XRP</option>
                 <option value="ADA">ADA</option>
-                <option value="FLOKI">FLOKI</option>
-                <option value="BNB">BNB</option>
                 <option value="DOGE">DOGE</option>
-                <option value="ALGO">ALGO</option>
-                <option value="THETA">THETA</option>
-                <option value="FTM">FTM</option>
-                <option value="TKO">TKO</option>
+                <option value="BNB">BNB</option>
+                <option value="PEPE">PEPE</option>
+                <option value="SHIBA">SHIBA</option>
+                <option value="SUI">SUI</option>
+                <option value="RAY">RAY</option>
+                <option value="TETHA">THETA</option>
+                <option value="HBAR">HBAR</option>
             </select>
         </div>
         <div class="form-group">
@@ -91,9 +153,9 @@
             <label for="buyAmount">Cantidad:</label>
             <input type="number" id="buyAmount" class="form-control" placeholder="Cantidad" required min="0.01" step="0.01">
         </div>
-        <button id="buyButton" class="btn btn-primary">Registrar Compra</button>
+        <button id="buyButton" class="btn">Registrar Compra</button>
 
-        <!-- Registro de Venta -->
+        <!-- Formulario de Venta -->
         <div class="form-group">
             <label for="sellSelect">Selecciona una Criptomoneda para Vender:</label>
             <select id="sellSelect" class="form-control"></select>
@@ -106,9 +168,16 @@
             <label for="sellAmount">Cantidad a Vender:</label>
             <input type="number" id="sellAmount" class="form-control" placeholder="Cantidad a vender" required min="0.01" step="0.01">
         </div>
-        <button id="sellButton" class="btn btn-danger">Registrar Venta</button>
+        <div class="sell-options">
+            <button class="btn" onclick="setSellPercentage(5)">5%</button>
+            <button class="btn" onclick="setSellPercentage(10)">10%</button>
+            <button class="btn" onclick="setSellPercentage(25)">25%</button>
+            <button class="btn" onclick="setSellPercentage(50)">50%</button>
+            <button class="btn" onclick="setSellPercentage(100)">100%</button>
+        </div>
+        <button id="sellButton" class="btn">Registrar Venta</button>
 
-        <!-- Total de Ganancias -->
+        <!-- Ganancias Totales -->
         <div class="total-gain" id="totalGain">Ganancias Totales: $0</div>
 
         <!-- Historial de Compras -->
@@ -141,278 +210,179 @@
         </table>
 
         <!-- Backup y Restauración -->
-        <button id="exportButton" class="btn btn-secondary">Exportar a CSV</button>
-        <input type="file" id="restoreInput" accept=".csv" style="display:none;" />
-        <button id="backupButton" class="btn btn-info">Backup</button>
-        <button id="restoreButton" class="btn btn-warning">Restaurar</button>
-        <button id="resetButton" class="btn btn-danger">Reiniciar Base de Datos</button>
+        <button id="backupButton" class="btn">Backup</button>
+        <button id="restoreButton" class="btn">Restaurar</button>
+        <button id="resetButton" class="btn">Reiniciar Base de Datos</button>
     </div>
 
     <script>
-        // Main application state
-        let cryptoTracker = {
-            purchases: [],
-            sales: [],
-            availableCrypto: {}
+        const db = localStorage;
+
+        const clearFields = () => {
+            document.getElementById('buyPrice').value = '';
+            document.getElementById('buyAmount').value = '';
+            document.getElementById('sellPrice').value = '';
+            document.getElementById('sellAmount').value = '';
         };
 
-        // Save data to localStorage
-        function saveToLocalStorage() {
-            localStorage.setItem('cryptoTracker', JSON.stringify(cryptoTracker));
-        }
-
-        // Load data from localStorage
-        function loadFromLocalStorage() {
-            const savedData = localStorage.getItem('cryptoTracker');
-            if (savedData) {
-                cryptoTracker = JSON.parse(savedData);
-                updateUI();
-            }
-        }
-
-        // Reset data
-        function resetData() {
-            cryptoTracker = {
-                purchases: [],
-                sales: [],
-                availableCrypto: {}
-            };
-            saveToLocalStorage();
-            updateUI();
-        }
-
-        // Update purchase history table
-        function displayPurchases() {
+        const updateTables = () => {
+            const purchases = JSON.parse(db.getItem('purchases') || '[]');
             const purchaseBody = document.getElementById('purchaseBody');
             purchaseBody.innerHTML = '';
-            cryptoTracker.purchases.forEach(purchase => {
-                const row = `
-                    <tr>
-                        <td>${purchase.crypto}</td>
-                        <td>$${purchase.buyPrice.toFixed(2)}</td>
-                        <td>${purchase.amount.toFixed(2)}</td>
-                        <td>${new Date(purchase.date).toLocaleString()}</td>
-                    </tr>
-                `;
+            purchases.forEach(purchase => {
+                const row = `<tr>
+                    <td>${purchase.crypto}</td>
+                    <td>$${purchase.price.toFixed(2)}</td>
+                    <td>${purchase.amount}</td>
+                    <td>${new Date(purchase.date).toLocaleString()}</td>
+                </tr>`;
                 purchaseBody.innerHTML += row;
             });
-        }
 
-        // Update sales history table
-        function displaySales() {
+            const sales = JSON.parse(db.getItem('sales') || '[]');
             const salesBody = document.getElementById('salesBody');
             salesBody.innerHTML = '';
-            cryptoTracker.sales.forEach(sale => {
-                const row = `
-                    <tr>
-                        <td>${sale.crypto}</td>
-                        <td>$${sale.sellPrice.toFixed(2)}</td>
-                        <td>${sale.amount.toFixed(2)}</td>
-                        <td>$${sale.gain.toFixed(2)}</td>
-                        <td>${new Date(sale.date).toLocaleString()}</td>
-                    </tr>
-                `;
+            let totalGain = 0;
+            sales.forEach(sale => {
+                totalGain += sale.gain;
+                const row = `<tr>
+                    <td>${sale.crypto}</td>
+                    <td>$${sale.price.toFixed(2)}</td>
+                    <td>${sale.amount}</td>
+                    <td>$${sale.gain.toFixed(2)}</td>
+                    <td>${new Date(sale.date).toLocaleString()}</td>
+                </tr>`;
                 salesBody.innerHTML += row;
             });
-        }
 
-        // Update total gains
-        function updateTotalGains() {
-            const totalGain = cryptoTracker.sales.reduce((sum, sale) => sum + sale.gain, 0);
-            document.getElementById('totalGain').textContent = `Ganancias Totales: $${totalGain.toFixed(2)}`;
-        }
+            document.getElementById('totalGain').innerText = `Ganancias Totales: $${totalGain.toFixed(2)}`;
 
-        // Update sell dropdown options
-        function updateSellOptions() {
             const sellSelect = document.getElementById('sellSelect');
             sellSelect.innerHTML = '';
-
-            // Calculate available crypto amounts
-            cryptoTracker.availableCrypto = {};
-            cryptoTracker.purchases.forEach(purchase => {
-                if (!cryptoTracker.availableCrypto[purchase.crypto]) {
-                    cryptoTracker.availableCrypto[purchase.crypto] = 0;
-                }
-                cryptoTracker.availableCrypto[purchase.crypto] += purchase.amount;
+            const uniqueCryptos = purchases.reduce((acc, p) => {
+                acc[p.crypto] = (acc[p.crypto] || 0) + p.amount;
+                return acc;
+            }, {});
+            Object.entries(uniqueCryptos).forEach(([crypto, amount]) => {
+                const option = `<option value="${crypto}">${crypto} (${amount.toFixed(2)})</option>`;
+                sellSelect.innerHTML += option;
             });
+        };
 
-            cryptoTracker.sales.forEach(sale => {
-                if (cryptoTracker.availableCrypto[sale.crypto]) {
-                    cryptoTracker.availableCrypto[sale.crypto] -= sale.amount;
-                }
-            });
+        const setSellPercentage = (percentage) => {
+            const sellSelect = document.getElementById('sellSelect');
+            const crypto = sellSelect.value;
+            const purchases = JSON.parse(db.getItem('purchases') || '[]');
+            const totalCrypto = purchases.filter(p => p.crypto === crypto).reduce((sum, p) => sum + p.amount, 0);
+            const amountToSell = (totalCrypto * percentage) / 100;
+            document.getElementById('sellAmount').value = amountToSell.toFixed(2);
+        };
 
-            // Populate sell options
-            Object.entries(cryptoTracker.availableCrypto)
-                .filter(([_, amount]) => amount > 0)
-                .forEach(([crypto, amount]) => {
-                    const option = document.createElement('option');
-                    option.value = crypto;
-                    option.textContent = `${crypto} (Disponible: ${amount.toFixed(2)})`;
-                    sellSelect.appendChild(option);
-                });
-        }
-
-        // Register purchase
-        document.getElementById('buyButton').addEventListener('click', function() {
+        document.getElementById('buyButton').addEventListener('click', () => {
             const crypto = document.getElementById('cryptoSelect').value;
-            const buyPrice = parseFloat(document.getElementById('buyPrice').value);
+            const price = parseFloat(document.getElementById('buyPrice').value);
             const amount = parseFloat(document.getElementById('buyAmount').value);
 
-            if (buyPrice > 0 && amount > 0) {
-                const purchase = {
-                    crypto,
-                    buyPrice,
-                    amount,
-                    date: new Date().toISOString()
-                };
-
-                cryptoTracker.purchases.push(purchase);
-                saveToLocalStorage();
-                updateUI();
-
-                // Reset inputs
-                document.getElementById('buyPrice').value = '';
-                document.getElementById('buyAmount').value = '';
+            if (!isNaN(price) && price > 0 && !isNaN(amount) && amount > 0) {
+                const purchases = JSON.parse(db.getItem('purchases') || '[]');
+                purchases.push({ crypto, price, amount, date: new Date() });
+                db.setItem('purchases', JSON.stringify(purchases));
+                alert('Compra registrada con éxito');
+                clearFields();
+                updateTables();
             } else {
-                alert('Por favor, ingrese valores válidos.');
+                alert('Por favor, ingresa valores válidos para la compra.');
             }
         });
 
-        // Register sale
-        document.getElementById('sellButton').addEventListener('click', function() {
+        document.getElementById('sellButton').addEventListener('click', () => {
             const crypto = document.getElementById('sellSelect').value;
-            const sellPrice = parseFloat(document.getElementById('sellPrice').value);
+            const price = parseFloat(document.getElementById('sellPrice').value);
             const amount = parseFloat(document.getElementById('sellAmount').value);
 
-            const availableAmount = cryptoTracker.availableCrypto[crypto] || 0;
+            if (!isNaN(price) && price > 0 && !isNaN(amount) && amount > 0) {
+                const purchases = JSON.parse(db.getItem('purchases') || '[]');
+                const totalCrypto = purchases.filter(p => p.crypto === crypto).reduce((sum, p) => sum + p.amount, 0);
 
-            if (sellPrice > 0 && amount > 0 && amount <= availableAmount) {
-                // Encontrar las compras correspondientes y calcular la ganancia
-                let remainingAmount = amount;
-                let totalPurchasePrice = 0;
-                let purchaseIndex = 0;
+                if (amount <= totalCrypto) {
+                    const remainingPurchases = [];
+                    let remainingAmount = amount;
 
-                while (remainingAmount > 0 && purchaseIndex < cryptoTracker.purchases.length) {
-                    const purchase = cryptoTracker.purchases[purchaseIndex];
-                    if (purchase.crypto === crypto) {
-                        const usedAmount = Math.min(remainingAmount, purchase.amount);
-                        totalPurchasePrice += usedAmount * purchase.buyPrice;
-                        remainingAmount -= usedAmount;
-                    }
-                    purchaseIndex++;
+                    purchases.forEach(purchase => {
+                        if (purchase.crypto === crypto && remainingAmount > 0) {
+                            const usedAmount = Math.min(remainingAmount, purchase.amount);
+                            purchase.amount -= usedAmount;
+                            remainingAmount -= usedAmount;
+
+                            if (purchase.amount > 0) {
+                                remainingPurchases.push(purchase);
+                            }
+                        } else {
+                            remainingPurchases.push(purchase);
+                        }
+                    });
+
+                    db.setItem('purchases', JSON.stringify(remainingPurchases));
+
+                    const gain = (price - purchases.find(p => p.crypto === crypto).price) * amount;
+
+                    const sales = JSON.parse(db.getItem('sales') || '[]');
+                    sales.push({ crypto, price, amount, gain, date: new Date() });
+                    db.setItem('sales', JSON.stringify(sales));
+
+                    alert('Venta registrada con éxito');
+                    clearFields();
+                    updateTables();
+                } else {
+                    alert('No tienes suficiente cantidad para vender.');
                 }
-
-                const gain = (sellPrice * amount) - totalPurchasePrice;
-                const sale = {
-                    crypto,
-                    sellPrice,
-                    amount,
-                    gain,
-                    date: new Date().toISOString()
-                };
-
-                cryptoTracker.sales.push(sale);
-                saveToLocalStorage();
-                updateUI();
-
-                // Reset inputs
-                document.getElementById('sellPrice').value = '';
-                document.getElementById('sellAmount').value = '';
             } else {
-                alert('Por favor, ingrese valores válidos o verifique la cantidad disponible.');
+                alert('Por favor, ingresa valores válidos para la venta.');
             }
         });
 
-        // Export to CSV
-        document.getElementById('exportButton').addEventListener('click', function() {
-            const csvContent = generateCSV();
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', 'crypto_tracker_backup.csv');
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        document.getElementById('backupButton').addEventListener('click', () => {
+            const backupData = {
+                purchases: JSON.parse(db.getItem('purchases') || '[]'),
+                sales: JSON.parse(db.getItem('sales') || '[]')
+            };
+            const backupBlob = new Blob([JSON.stringify(backupData)], { type: 'application/json' });
+            const backupLink = document.createElement('a');
+            backupLink.href = URL.createObjectURL(backupBlob);
+            backupLink.download = 'backup.json';
+            backupLink.click();
         });
 
-        // Generate CSV content
-        function generateCSV() {
-            let csvContent = 'Type,Crypto,Price,Amount,Date,Gain\n';
-            
-            cryptoTracker.purchases.forEach(p => {
-                csvContent += `Purchase,${p.crypto},${p.buyPrice},${p.amount},${p.date},\n`;
-            });
-            
-            cryptoTracker.sales.forEach(s => {
-                csvContent += `Sale,${s.crypto},${s.sellPrice},${s.amount},${s.date},${s.gain}\n`;
-            });
-            
-            return csvContent;
-        }
+        document.getElementById('restoreButton').addEventListener('click', () => {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = '.json';
+            fileInput.click();
 
-        // Backup data
-        document.getElementById('backupButton').addEventListener('click', function() {
-            const backupData = JSON.stringify(cryptoTracker);
-            const blob = new Blob([backupData], { type: 'application/json' });
-            const link = document.createElement('a');
-            const url = URL.createObjectURL(blob);
-            link.setAttribute('href', url);
-            link.setAttribute('download', 'crypto_tracker_backup.json');
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        });
-
-        // Restore data
-        document.getElementById('restoreButton').addEventListener('click', function() {
-            document.getElementById('restoreInput').click();
-        });
-
-        document.getElementById('restoreInput').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    try {
-                        const restoredData = JSON.parse(e.target.result);
-                        cryptoTracker = restoredData;
-                        saveToLocalStorage();
-                        updateUI();
-                        alert('Datos restaurados exitosamente.');
-                    } catch (error) {
-                        alert('Error al restaurar los datos. Verifique el archivo.');
-                    }
-                };
                 reader.readAsText(file);
+
+                reader.onload = () => {
+                    const restoredData = JSON.parse(reader.result);
+                    db.setItem('purchases', JSON.stringify(restoredData.purchases));
+                    db.setItem('sales', JSON.stringify(restoredData.sales));
+                    alert('Datos restaurados con éxito');
+                    updateTables();
+                };
+            });
+        });
+
+        document.getElementById('resetButton').addEventListener('click', () => {
+            if (confirm('¿Estás seguro de que deseas reiniciar la base de datos?')) {
+                db.clear();
+                alert('Base de datos reiniciada');
+                updateTables();
             }
         });
 
-        // Reset data
-        document.getElementById('resetButton').addEventListener('click', function() {
-            if (confirm('¿Está seguro de que desea reiniciar la base de datos?')) {
-                resetData();
-                alert('Base de datos reiniciada exitosamente.');
-            }
-        });
-
-        // Update entire UI
-        function updateUI() {
-            displayPurchases();
-            displaySales();
-            updateSellOptions();
-            updateTotalGains();
-        }
-
-        // Initialize app
-        function initializeApp() {
-            loadFromLocalStorage();
-        }
-
-        initializeApp();
+        updateTables();
     </script>
 </body>
 </html>
