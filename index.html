@@ -8,10 +8,14 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- jQuery y Bootstrap JS para el Modal -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!-- jQuery y Bootstrap JS para los Modales -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Select2 CSS y JS para autocompletado -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <style>
+        /* Estilos Personalizados */
         body {
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #a8d5ba, #f5f3e5);
@@ -30,13 +34,13 @@
         }
         h2, h3 {
             text-align: center;
-            font-size: 1rem;
+            font-size: 1.8rem;
             color: #6b8e23;
             text-shadow: 0 0 5px #6b8e23;
             margin-bottom: 20px;
         }
         .form-group label {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: #4b3832;
         }
         .form-group input, .form-group select {
@@ -46,6 +50,7 @@
             background: rgba(245, 243, 229, 0.8);
             color: #4b3832;
             border-radius: 5px;
+            transition: all 0.3s ease;
         }
         .form-group input:focus, .form-group select:focus {
             outline: none;
@@ -53,20 +58,47 @@
             box-shadow: 0 0 10px #8fbc8f;
         }
         .btn {
-            font-size: 0.8rem;
+            font-size: 1rem;
             width: 100%;
             margin-bottom: 10px;
             border: none;
             border-radius: 5px;
-            background: #6b8e23;
-            color: #fff;
             box-shadow: 0 0 10px rgba(107, 142, 35, 0.5);
             transition: transform 0.2s ease-in-out, background 0.2s ease-in-out;
         }
-        .btn:hover {
+        /* Botones específicos */
+        #buyButton {
+            background-color: #28a745; /* Verde */
+            color: #fff;
+        }
+        #buyButton:hover {
+            background-color: #218838;
             transform: scale(1.05);
-            background: #556b2f;
-            box-shadow: 0 0 15px rgba(85, 107, 47, 0.8);
+        }
+        #sellButton {
+            background-color: #dc3545; /* Rojo */
+            color: #fff;
+        }
+        #sellButton:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+        .action-btn.edit-btn {
+            background: #007bff; /* Azul */
+            color: #fff;
+            margin-right: 5px;
+        }
+        .action-btn.edit-btn:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+        .action-btn.delete-btn {
+            background: #dc3545; /* Rojo */
+            color: #fff;
+        }
+        .action-btn.delete-btn:hover {
+            background: #a71d2a;
+            transform: scale(1.05);
         }
         table {
             margin-top: 15px;
@@ -84,7 +116,7 @@
             border: 1px solid #6b8e23;
         }
         th {
-            background: #8fbc8f;
+            background: #6b8e23;
             color: #fff;
             text-shadow: 0 0 5px #6b8e23;
         }
@@ -130,91 +162,95 @@
             max-width: 100%;
             height: auto !important;
         }
-        .calculator-container {
-            margin-top: 40px;
+        .calculation-group {
+            margin-top: 10px;
         }
-        .calculator-container .container {
-            padding: 20px;
-            border: 2px solid #4b3832;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(75, 56, 50, 0.3);
-            background: rgba(255, 255, 255, 0.95);
+        .calculation-group label {
+            font-size: 0.8rem;
+            color: #4b3832;
         }
-        .calculator-container h3 {
-            color: #ff5733;
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-            margin-bottom: 20px;
+        .calculation-group input {
+            font-size: 0.9rem;
+            padding: 6px;
+            border: 1px solid #6b8e23;
+            background: rgba(245, 243, 229, 0.8);
+            color: #4b3832;
+            border-radius: 5px;
+            transition: all 0.3s ease;
         }
-        .calculator-container input[type="number"] {
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-            margin-top: 8px;
-            background-color: rgba(240, 240, 240, 1);
+        .calculation-group input:disabled {
+            background: rgba(240, 240, 240, 1);
             color: #333;
-            font-size: 16px;
-            font-weight: bold;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s ease, transform 0.3s ease;
         }
-        .calculator-container input[type="number"]:focus {
-            background-color: rgba(255, 255, 200, 1);
-            transform: scale(1.05);
-            border-color: #ff5733;
+        /* Estilos para la lista de criptomonedas */
+        #cryptoList {
+            margin-top: 30px;
         }
-        .calculator-container .result {
-            margin-top: 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #28a745;
-            text-align: center;
-            padding: 15px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border: 1px solid #28a745;
-            border-radius: 10px;
-            display: none;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        #cryptoList table {
+            font-size: 0.9rem;
         }
-        .calculator-container .error {
-            color: #c82333;
-            font-size: 1rem;
-            text-align: center;
-            margin-top: 15px;
-            background-color: rgba(255, 230, 230, 1);
-            padding: 10px;
-            border-radius: 10px;
-            display: none;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        .modal-header {
+            background-color: #6b8e23;
+            color: #fff;
         }
+        /* Estilos Mejorados para los Modales */
+        .modal-content {
+            border-radius: 15px;
+        }
+        /* Mejorar la Responsividad */
         @media (max-width: 768px) {
             h2, h3 {
                 font-size: 1.5rem;
             }
             .form-group input, .form-group select, .btn {
-                font-size: 1.1rem;
+                font-size: 1rem;
                 padding: 12px;
             }
             table {
-                font-size: 0.9rem;
+                font-size: 0.8rem;
             }
             .sell-options button {
                 flex: 1 1 100%;
             }
             .total-gain {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
-            .calculator-container h3 {
-                font-size: 1.3rem;
+            .calculation-group label {
+                font-size: 0.7rem;
             }
-            .calculator-container input[type="number"] {
-                font-size: 1rem;
+            .calculation-group input {
+                font-size: 0.8rem;
             }
-            .calculator-container .result {
-                font-size: 1.2rem;
+            .action-btn {
+                font-size: 0.7rem;
+                padding: 3px 6px;
             }
-            .calculator-container .error {
-                font-size: 0.9rem;
-            }
+        }
+        /* Estilos para los Modales de Editar Criptomoneda */
+        #editCryptoModal .modal-header {
+            background-color: #007bff;
+            color: #fff;
+        }
+        #editCryptoModal .modal-footer .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+        }
+        #editCryptoModal .modal-footer .btn-secondary {
+            background-color: #ccc;
+            color: #333;
+        }
+        /* Mejoras de Color y Estilo General */
+        .table thead th {
+            background-color: #6b8e23;
+            color: white;
+        }
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        /* Estilos para Botones de Gestión de Criptomoneda */
+        #cryptoListModal .btn {
+            width: auto;
+            margin: 2px;
         }
     </style>
 </head>
@@ -222,39 +258,43 @@
     <div class="container">
         <h2>Registro de Compras y Ventas de Criptomonedas</h2>
 
+        <!-- Botones para Añadir Criptomoneda, Gestionar Lista y Ver Historiales -->
+        <div class="d-flex justify-content-between mb-3 flex-wrap">
+            <button class="btn btn-primary mr-2 mb-2" data-toggle="modal" data-target="#addCryptoModal">Añadir Criptomoneda</button>
+            <button class="btn btn-secondary mr-2 mb-2" data-toggle="modal" data-target="#cryptoListModal">Gestionar Criptomonedas</button>
+            <button class="btn btn-info mr-2 mb-2" data-toggle="modal" data-target="#purchaseHistoryModal">Ver Historial de Compras</button>
+            <button class="btn btn-warning mr-2 mb-2" data-toggle="modal" data-target="#salesHistoryModal">Ver Historial de Ventas</button>
+        </div>
+
+        <!-- Botón para Reiniciar Base de Datos -->
+        <div class="backup-buttons mb-4">
+            <button class="btn btn-outline-danger" id="resetButton">Reiniciar Base de Datos</button>
+        </div>
+
         <!-- Formulario de Compra y Venta en Rejilla -->
-        <div class="row">
+        <div class="row mt-4">
             <!-- Formulario de Compra -->
             <div class="col-md-6">
                 <h3>Registrar Compra</h3>
                 <div class="form-group">
                     <label for="cryptoSelect">Selecciona una Criptomoneda:</label>
                     <select id="cryptoSelect" class="form-control">
-                        <option value="SOL">SOL</option>
-                        <option value="BTC">BTC</option>
-                        <option value="ETH">ETH</option>
-                        <option value="FTM">FTM</option>
-                        <option value="XRP">XRP</option>
-                        <option value="ADA">ADA</option>
-                        <option value="DOGE">DOGE</option>
-                        <option value="BNB">BNB</option>
-                        <option value="PEPE">PEPE</option>
-                        <option value="SHIBA">SHIBA</option>
-                        <option value="SUI">SUI</option>
-                        <option value="RAY">RAY</option>
-                        <option value="TETHA">THETA</option>
-                        <option value="HBAR">HBAR</option>
+                        <!-- Opciones dinámicas cargadas desde JS -->
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="buyPrice">Precio de Compra (USD):</label>
-                    <input type="number" id="buyPrice" class="form-control" placeholder="Ejemplo: 30000" required min="0.01" step="0.01">
+                    <input type="number" id="buyPrice" class="form-control" placeholder="Ejemplo: 30000" required min="0.01" step="0.01" oninput="calculateBuyAmount()">
+                </div>
+                <div class="calculation-group">
+                    <label for="moneyAmountBuy">Monto Invertido (USD):</label>
+                    <input type="number" id="moneyAmountBuy" class="form-control" placeholder="Ejemplo: 1000" required min="0.01" step="0.01" oninput="calculateBuyAmount()">
                 </div>
                 <div class="form-group">
                     <label for="buyAmount">Cantidad Comprada:</label>
-                    <input type="number" id="buyAmount" class="form-control" placeholder="Ejemplo: 0.5" required min="0.0001" step="0.0001">
+                    <input type="number" id="buyAmount" class="form-control" placeholder="Calculado automáticamente" disabled>
                 </div>
-                <button id="buyButton" class="btn">Registrar Compra</button>
+                <button id="buyButton" class="btn btn-success">Registrar Compra</button>
             </div>
 
             <!-- Formulario de Venta -->
@@ -262,24 +302,34 @@
                 <h3>Registrar Venta</h3>
                 <div class="form-group">
                     <label for="sellSelect">Selecciona una Criptomoneda para Vender:</label>
-                    <select id="sellSelect" class="form-control"></select>
+                    <select id="sellSelect" class="form-control">
+                        <!-- Opciones dinámicas cargadas desde JS -->
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="sellPrice">Precio de Venta (USD):</label>
-                    <input type="number" id="sellPrice" class="form-control" placeholder="Ejemplo: 40000" required min="0.01" step="0.01">
+                    <input type="number" id="sellPrice" class="form-control" placeholder="Ejemplo: 40000" required min="0.01" step="0.01" oninput="calculateSellGain()">
                 </div>
                 <div class="form-group">
                     <label for="sellAmount">Cantidad a Vender:</label>
-                    <input type="number" id="sellAmount" class="form-control" placeholder="Cantidad a vender" required min="0.01" step="0.01">
+                    <input type="number" id="sellAmount" class="form-control" placeholder="Cantidad a vender" required min="0.01" step="0.01" oninput="calculateSellGain()">
+                </div>
+                <div class="form-group">
+                    <label for="purchasePrice">Precio de Compra Promedio (USD):</label>
+                    <input type="number" id="purchasePrice" class="form-control" placeholder="Calculado automáticamente" disabled>
+                </div>
+                <div class="calculation-group">
+                    <label for="sellGain">Ganancia/Pérdida Estimada (USD):</label>
+                    <input type="number" id="sellGain" class="form-control" placeholder="Calculado automáticamente" disabled>
                 </div>
                 <div class="sell-options">
-                    <button class="btn" onclick="setSellPercentage(5)">5%</button>
-                    <button class="btn" onclick="setSellPercentage(10)">10%</button>
-                    <button class="btn" onclick="setSellPercentage(25)">25%</button>
-                    <button class="btn" onclick="setSellPercentage(50)">50%</button>
-                    <button class="btn" onclick="setSellPercentage(100)">100%</button>
+                    <button class="btn btn-outline-secondary" onclick="setSellPercentage(5)">5%</button>
+                    <button class="btn btn-outline-secondary" onclick="setSellPercentage(10)">10%</button>
+                    <button class="btn btn-outline-secondary" onclick="setSellPercentage(25)">25%</button>
+                    <button class="btn btn-outline-secondary" onclick="setSellPercentage(50)">50%</button>
+                    <button class="btn btn-outline-secondary" onclick="setSellPercentage(100)">100%</button>
                 </div>
-                <button id="sellButton" class="btn">Registrar Venta</button>
+                <button id="sellButton" class="btn btn-danger">Registrar Venta</button>
             </div>
         </div>
 
@@ -291,83 +341,6 @@
         <div class="row">
             <div class="col-12">
                 <canvas id="portfolioChart" height="400"></canvas>
-            </div>
-        </div>
-
-        <!-- Historial de Compras -->
-        <h3>Historial de Compras</h3>
-        <div class="table-responsive">
-            <table class="table table-bordered" id="purchaseTable">
-                <thead>
-                    <tr>
-                        <th>Cripto</th>
-                        <th>Precio de Compra (USD)</th>
-                        <th>Cantidad</th>
-                        <th>Fecha</th>
-                    </tr>
-                </thead>
-                <tbody id="purchaseBody"></tbody>
-            </table>
-        </div>
-
-        <!-- Historial de Ventas -->
-        <h3>Historial de Ventas</h3>
-        <div class="table-responsive">
-            <table class="table table-bordered" id="salesTable">
-                <thead>
-                    <tr>
-                        <th>Cripto</th>
-                        <th>Precio de Venta (USD)</th>
-                        <th>Cantidad</th>
-                        <th>Ganancia</th>
-                        <th>Fecha</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="salesBody"></tbody>
-            </table>
-        </div>
-
-        <!-- Backup y Restauración -->
-        <div class="row">
-            <div class="col-md-4 col-12 mb-2">
-                <button id="backupButton" class="btn">Backup</button>
-            </div>
-            <div class="col-md-4 col-12 mb-2">
-                <button id="restoreButton" class="btn">Restaurar</button>
-            </div>
-            <div class="col-md-4 col-12 mb-2">
-                <button id="resetButton" class="btn">Reiniciar Base de Datos</button>
-            </div>
-        </div>
-
-        <!-- Sección de Calculadora de Criptomonedas -->
-        <div class="calculator-container">
-            <div class="container">
-                <h3>Calculadora de Criptomonedas By Rev24</h3>
-
-                <div class="form-group">
-                    <label for="moneyAmountCalc">Monto Invertido (USD):</label>
-                    <input type="number" id="moneyAmountCalc" class="form-control" placeholder="Ejemplo: 1000" required oninput="calculateCoinsAndSetQuantityCalc()">
-                </div>
-
-                <div class="form-group">
-                    <label for="purchasePriceCalc">Precio de Compra (USD):</label>
-                    <input type="number" id="purchasePriceCalc" class="form-control" placeholder="Ejemplo: 30000" required oninput="calculateCoinsAndSetQuantityCalc()">
-                </div>
-
-                <div class="form-group">
-                    <label for="quantityCalc">Cantidad Comprada:</label>
-                    <input type="number" id="quantityCalc" class="form-control" placeholder="Calculado automáticamente" disabled>
-                </div>
-
-                <div class="form-group">
-                    <label for="currentPriceCalc">Precio Actual (USD):</label>
-                    <input type="number" id="currentPriceCalc" class="form-control" placeholder="Ejemplo: 40000" required oninput="calculateProfitCalc()">
-                </div>
-
-                <div class="result" id="calcResult"></div>
-                <div class="error" id="calcError"></div>
             </div>
         </div>
     </div>
@@ -384,20 +357,26 @@
           </div>
           <form id="editSaleForm">
               <div class="modal-body">
-                  <input type="hidden" id="editSaleIndex">
+                  <input type="hidden" id="editSaleId">
                   <div class="form-group">
                       <label for="editSellPrice">Precio de Venta (USD):</label>
-                      <input type="number" id="editSellPrice" class="form-control" placeholder="Ejemplo: 40000" required min="0.01" step="0.01">
+                      <input type="number" id="editSellPrice" class="form-control" placeholder="Ejemplo: 40000" required min="0.01" step="0.01" oninput="updateEditSellGain()">
                   </div>
                   <div class="form-group">
                       <label for="editSellAmount">Cantidad a Vender:</label>
-                      <input type="number" id="editSellAmount" class="form-control" placeholder="Ejemplo: 0.5" required min="0.01" step="0.01">
+                      <input type="number" id="editSellAmount" class="form-control" placeholder="Ejemplo: 0.5" required min="0.01" step="0.01" oninput="updateEditSellGain()">
                   </div>
                   <div class="form-group">
                       <label for="editSellCrypto">Criptomoneda:</label>
-                      <input type="text" id="editSellCrypto" class="form-control" readonly>
+                      <select id="editSellCrypto" class="form-control" disabled>
+                          <!-- Opciones dinámicas cargadas desde JS -->
+                      </select>
                   </div>
-                  <div class="error" id="editError"></div>
+                  <div class="form-group">
+                      <label for="editSellGain">Ganancia/Pérdida Estimada (USD):</label>
+                      <input type="number" id="editSellGain" class="form-control" placeholder="Calculado automáticamente" disabled>
+                  </div>
+                  <div class="error text-danger" id="editError"></div>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
@@ -408,18 +387,543 @@
       </div>
     </div>
 
-    <script>
-        const db = localStorage;
-        let portfolioChart = null;
+    <!-- Modal para Añadir Criptomoneda -->
+    <div class="modal fade" id="addCryptoModal" tabindex="-1" aria-labelledby="addCryptoModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="addCryptoModalLabel">Añadir Nueva Criptomoneda</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="addCryptoForm">
+              <div class="modal-body">
+                  <div class="form-group">
+                      <label for="newCryptoName">Nombre de la Criptomoneda:</label>
+                      <input type="text" id="newCryptoName" class="form-control text-uppercase" placeholder="Ejemplo: LTC" required oninput="this.value = this.value.toUpperCase()">
+                  </div>
+                  <div class="error text-danger" id="addCryptoError"></div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Añadir</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
 
-        const clearFields = () => {
-            document.getElementById('buyPrice').value = '';
-            document.getElementById('buyAmount').value = '';
-            document.getElementById('sellPrice').value = '';
-            document.getElementById('sellAmount').value = '';
+    <!-- Modal para Gestionar Criptomonedas -->
+    <div class="modal fade" id="cryptoListModal" tabindex="-1" aria-labelledby="cryptoListModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="cryptoListModalLabel">Gestionar Criptomonedas</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <!-- Tabla para gestionar criptomonedas -->
+              <div id="manageCryptoList" style="margin-top: 20px;">
+                  <h5>Lista de Criptomonedas</h5>
+                  <table class="table table-bordered">
+                      <thead>
+                          <tr>
+                              <th>Criptomoneda</th>
+                              <th>Acciones</th>
+                          </tr>
+                      </thead>
+                      <tbody id="manageCryptoBody">
+                          <!-- Filas dinámicas cargadas desde JS -->
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para Editar Criptomoneda -->
+    <div class="modal fade" id="editCryptoModal" tabindex="-1" aria-labelledby="editCryptoModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="editCryptoModalLabel">Editar Criptomoneda</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <form id="editCryptoForm">
+              <div class="modal-body">
+                  <input type="hidden" id="editCryptoId">
+                  <div class="form-group">
+                      <label for="editCryptoName">Nuevo Nombre de la Criptomoneda:</label>
+                      <input type="text" id="editCryptoName" class="form-control text-uppercase" placeholder="Ejemplo: LTC" required oninput="this.value = this.value.toUpperCase()">
+                  </div>
+                  <div class="error text-danger" id="editCryptoError"></div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para Historial de Compras -->
+    <div class="modal fade" id="purchaseHistoryModal" tabindex="-1" aria-labelledby="purchaseHistoryModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="purchaseHistoryModalLabel">Historial de Compras</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <div class="table-responsive">
+                  <table class="table table-bordered" id="purchaseHistoryTable">
+                      <thead>
+                          <tr>
+                              <th>Cripto</th>
+                              <th>Precio de Compra (USD)</th>
+                              <th>Cantidad</th>
+                              <th>Fecha</th>
+                          </tr>
+                      </thead>
+                      <tbody id="purchaseHistoryBody"></tbody>
+                  </table>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para Historial de Ventas -->
+    <div class="modal fade" id="salesHistoryModal" tabindex="-1" aria-labelledby="salesHistoryModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="salesHistoryModalLabel">Historial de Ventas</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <div class="table-responsive">
+                  <table class="table table-bordered" id="salesHistoryTable">
+                      <thead>
+                          <tr>
+                              <th>Cripto</th>
+                              <th>Precio de Venta (USD)</th>
+                              <th>Cantidad</th>
+                              <th>Ganancia</th>
+                              <th>Fecha</th>
+                              <th>Compras Asociadas</th>
+                              <th>Acciones</th>
+                          </tr>
+                      </thead>
+                      <tbody id="salesHistoryBody"></tbody>
+                  </table>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+        // Configuración de IndexedDB
+        let db;
+        const dbName = "CryptoPortfolioDB";
+        const dbVersion = 1;
+
+        const request = indexedDB.open(dbName, dbVersion);
+
+        request.onerror = function(event) {
+            console.error("Error al abrir IndexedDB:", event.target.errorCode);
+            alert("Error al abrir la base de datos.");
         };
 
-        const updateChart = (cryptoLabels, cryptoAmounts) => {
+        request.onsuccess = function(event) {
+            db = event.target.result;
+            loadCryptos();
+            updateTables();
+        };
+
+        request.onupgradeneeded = function(event) {
+            db = event.target.result;
+
+            if (!db.objectStoreNames.contains("cryptos")) {
+                const cryptosStore = db.createObjectStore("cryptos", { keyPath: "id", autoIncrement: true });
+                cryptosStore.createIndex("name", "name", { unique: true });
+            }
+
+            if (!db.objectStoreNames.contains("purchases")) {
+                const purchasesStore = db.createObjectStore("purchases", { keyPath: "id", autoIncrement: true });
+                purchasesStore.createIndex("cryptoId", "cryptoId", { unique: false });
+            }
+
+            if (!db.objectStoreNames.contains("sales")) {
+                const salesStore = db.createObjectStore("sales", { keyPath: "id", autoIncrement: true });
+                salesStore.createIndex("cryptoId", "cryptoId", { unique: false });
+            }
+
+            // Inicializar con criptomonedas predeterminadas si están vacías
+            const transaction = event.target.transaction;
+            const cryptosStore = transaction.objectStore("cryptos");
+            const countRequest = cryptosStore.count();
+
+            countRequest.onsuccess = function() {
+                if (countRequest.result === 0) {
+                    const defaultCryptos = ["SOL","BTC","ETH","FTM","XRP","ADA","DOGE","BNB","PEPE","SHIBA","SUI","RAY","THETA","HBAR"];
+                    defaultCryptos.forEach(name => {
+                        cryptosStore.add({ name });
+                    });
+                }
+            };
+        };
+
+        // Función para generar colores aleatorios para el gráfico
+        function getRandomColor(index) {
+            const colors = [
+                '#FF6384', '#36A2EB', '#FFCE56', '#ADFF2F', '#FFA07A',
+                '#9370DB', '#00FA9A', '#6495ED', '#FFD700', '#D2691E',
+                '#40E0D0', '#808000', '#FF69B4', '#8B0000'
+            ];
+            return colors[index % colors.length];
+        }
+
+        let portfolioChart = null;
+
+        // Función para cargar criptomonedas en los selects y en la tabla de gestión
+        function loadCryptos() {
+            const cryptoSelect = document.getElementById('cryptoSelect');
+            const sellSelect = document.getElementById('sellSelect');
+
+            // Limpiar selects antes de cargarlos
+            cryptoSelect.innerHTML = '';
+            sellSelect.innerHTML = '';
+
+            const transaction = db.transaction(["cryptos"], "readonly");
+            const cryptosStore = transaction.objectStore("cryptos");
+            const request = cryptosStore.openCursor();
+
+            request.onsuccess = function(event) {
+                const cursor = event.target.result;
+                if (cursor) {
+                    const crypto = cursor.value;
+                    const option = `<option value="${crypto.id}">${crypto.name}</option>`;
+                    cryptoSelect.innerHTML += option;
+                    cursor.continue();
+                } else {
+                    // Inicializar Select2
+                    $('#cryptoSelect').select2({
+                        placeholder: "Selecciona una Criptomoneda",
+                        allowClear: true,
+                        width: '100%'
+                    });
+
+                    $('#sellSelect').select2({
+                        placeholder: "Selecciona una Criptomoneda",
+                        allowClear: true,
+                        width: '100%'
+                    });
+
+                    // Actualizar la tabla de gestión de criptomonedas
+                    updateManageCryptoList();
+                }
+            };
+        }
+
+        // Función para actualizar la tabla de gestión de criptomonedas
+        function updateManageCryptoList() {
+            const manageCryptoBody = document.getElementById('manageCryptoBody');
+            manageCryptoBody.innerHTML = '';
+
+            const transaction = db.transaction(["cryptos"], "readonly");
+            const cryptosStore = transaction.objectStore("cryptos");
+            const request = cryptosStore.openCursor();
+
+            request.onsuccess = function(event) {
+                const cursor = event.target.result;
+                if (cursor) {
+                    const crypto = cursor.value;
+                    const row = `
+                        <tr>
+                            <td>${crypto.name}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary edit-crypto-btn" data-crypto-id="${crypto.id}" data-crypto-name="${crypto.name}">Editar</button>
+                                <button class="btn btn-sm btn-danger delete-crypto-btn" data-crypto-id="${crypto.id}" data-crypto-name="${crypto.name}">Eliminar</button>
+                            </td>
+                        </tr>
+                    `;
+                    manageCryptoBody.innerHTML += row;
+                    cursor.continue();
+                }
+            };
+        }
+
+        // Función para actualizar las tablas y el gráfico
+        function updateTables() {
+            updatePurchaseHistory();
+            updateSalesHistory();
+            updateTotalGain();
+            updateSellSelect();
+            updateChartFromHoldings();
+        }
+
+        // Función para actualizar el historial de compras
+        function updatePurchaseHistory() {
+            const purchaseHistoryBody = document.getElementById('purchaseHistoryBody');
+            purchaseHistoryBody.innerHTML = '';
+
+            const transaction = db.transaction(["purchases", "cryptos"], "readonly");
+            const purchasesStore = transaction.objectStore("purchases");
+            const cryptosStore = transaction.objectStore("cryptos");
+            const request = purchasesStore.openCursor();
+
+            request.onsuccess = function(event) {
+                const cursor = event.target.result;
+                if (cursor) {
+                    const purchase = cursor.value;
+                    const cryptoRequest = cryptosStore.get(purchase.cryptoId);
+                    cryptoRequest.onsuccess = function() {
+                        const crypto = cryptoRequest.result;
+                        if (crypto) {
+                            const row = `<tr>
+                                <td>${crypto.name}</td>
+                                <td>$${purchase.price.toFixed(2)}</td>
+                                <td>${purchase.amount}</td>
+                                <td>${new Date(purchase.date).toLocaleString()}</td>
+                            </tr>`;
+                            purchaseHistoryBody.innerHTML += row;
+                        } else {
+                            console.warn(`Criptomoneda con ID ${purchase.cryptoId} no encontrada para la compra ID ${purchase.id}.`);
+                        }
+                    };
+                    cursor.continue();
+                }
+            };
+        }
+
+        // Función para actualizar el historial de ventas
+        function updateSalesHistory() {
+            const salesHistoryBody = document.getElementById('salesHistoryBody');
+            salesHistoryBody.innerHTML = '';
+
+            const transaction = db.transaction(["sales", "cryptos"], "readonly");
+            const salesStore = transaction.objectStore("sales");
+            const cryptosStore = transaction.objectStore("cryptos");
+            const request = salesStore.openCursor();
+
+            request.onsuccess = function(event) {
+                const cursor = event.target.result;
+                if (cursor) {
+                    const sale = cursor.value;
+                    const cryptoRequest = cryptosStore.get(sale.cryptoId);
+                    cryptoRequest.onsuccess = function() {
+                        const crypto = cryptoRequest.result;
+                        if (crypto) {
+                            const associatedPurchases = sale.associatedPurchases.map(ap => `ID: ${ap.purchaseId} (${ap.amount})`).join(', ') || 'N/A';
+                            const row = `<tr>
+                                <td>${crypto.name}</td>
+                                <td>$${sale.price.toFixed(2)}</td>
+                                <td>${sale.amount}</td>
+                                <td>$${sale.gain.toFixed(2)}</td>
+                                <td>${new Date(sale.date).toLocaleString()}</td>
+                                <td>${associatedPurchases}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-primary edit-sale-btn" data-sale-id="${sale.id}">Editar</button>
+                                </td>
+                            </tr>`;
+                            salesHistoryBody.innerHTML += row;
+                        } else {
+                            console.warn(`Criptomoneda con ID ${sale.cryptoId} no encontrada para la venta ID ${sale.id}.`);
+                        }
+                    };
+                    cursor.continue();
+                }
+            };
+        }
+
+        // Función para actualizar las ganancias totales
+        function updateTotalGain() {
+            let totalGain = 0;
+
+            const transaction = db.transaction(["sales"], "readonly");
+            const salesStore = transaction.objectStore("sales");
+            const request = salesStore.openCursor();
+
+            request.onsuccess = function(event) {
+                const cursor = event.target.result;
+                if (cursor) {
+                    const sale = cursor.value;
+                    totalGain += sale.gain;
+                    cursor.continue();
+                } else {
+                    const totalGainElement = document.getElementById('totalGain');
+                    totalGainElement.innerText = `Ganancias Totales: $${totalGain.toFixed(2)}`;
+
+                    if (totalGain > 0) {
+                        totalGainElement.classList.add('profit');
+                        totalGainElement.classList.remove('loss');
+                    } else if (totalGain < 0) {
+                        totalGainElement.classList.add('loss');
+                        totalGainElement.classList.remove('profit');
+                    } else {
+                        totalGainElement.classList.remove('profit', 'loss');
+                    }
+                }
+            };
+        }
+
+        // Función para actualizar el select de ventas
+        function updateSellSelect() {
+            const sellSelect = document.getElementById('sellSelect');
+            sellSelect.innerHTML = '';
+
+            const holdings = {};
+
+            const transaction = db.transaction(["purchases", "sales"], "readonly");
+            const purchasesStore = transaction.objectStore("purchases");
+            const salesStore = transaction.objectStore("sales");
+
+            const purchasesRequest = purchasesStore.openCursor();
+            purchasesRequest.onsuccess = function(event) {
+                const cursor = event.target.result;
+                if (cursor) {
+                    const purchase = cursor.value;
+                    // Acumular las compras por cryptoId
+                    holdings[purchase.cryptoId] = (holdings[purchase.cryptoId] || 0) + purchase.amount;
+                    cursor.continue();
+                } else {
+                    const salesRequest = salesStore.openCursor();
+                    salesRequest.onsuccess = function(event) {
+                        const cursor = event.target.result;
+                        if (cursor) {
+                            const sale = cursor.value;
+                            holdings[sale.cryptoId] = (holdings[sale.cryptoId] || 0) - sale.amount;
+                            cursor.continue();
+                        } else {
+                            // Ahora holdings tiene las cantidades disponibles
+                            const cryptoIds = Object.keys(holdings).filter(id => holdings[id] > 0);
+                            if (cryptoIds.length === 0) {
+                                sellSelect.innerHTML = '<option value="">No hay criptomonedas disponibles para vender</option>';
+                                $('#sellSelect').select2({
+                                    placeholder: "Selecciona una Criptomoneda",
+                                    allowClear: true,
+                                    width: '100%'
+                                });
+                            } else {
+                                const cryptosTransaction = db.transaction(["cryptos"], "readonly");
+                                const cryptosStore = cryptosTransaction.objectStore("cryptos");
+                                let processed = 0;
+
+                                cryptoIds.forEach(id => {
+                                    const cryptoRequest = cryptosStore.get(Number(id));
+                                    cryptoRequest.onsuccess = function() {
+                                        const crypto = cryptoRequest.result;
+                                        if (crypto) {
+                                            sellSelect.innerHTML += `<option value="${crypto.id}">${crypto.name} (${holdings[id].toFixed(2)})</option>`;
+                                        }
+                                        processed++;
+                                        if (processed === cryptoIds.length) {
+                                            initializeSellSelect();
+                                        }
+                                    };
+                                });
+                            }
+                        }
+                    };
+                }
+            };
+        }
+
+        // Función para inicializar Select2 en el select de ventas
+        function initializeSellSelect() {
+            $('#sellSelect').select2({
+                placeholder: "Selecciona una Criptomoneda",
+                allowClear: true,
+                width: '100%'
+            });
+        }
+
+        // Función para actualizar el gráfico basado en holdings
+        function updateChartFromHoldings() {
+            const holdings = {};
+
+            const transaction = db.transaction(["purchases", "sales"], "readonly");
+            const purchasesStore = transaction.objectStore("purchases");
+            const salesStore = transaction.objectStore("sales");
+
+            const purchasesRequest = purchasesStore.openCursor();
+            purchasesRequest.onsuccess = function(event) {
+                const cursor = event.target.result;
+                if (cursor) {
+                    const purchase = cursor.value;
+                    holdings[purchase.cryptoId] = (holdings[purchase.cryptoId] || 0) + purchase.amount;
+                    cursor.continue();
+                } else {
+                    const salesRequest = salesStore.openCursor();
+                    salesRequest.onsuccess = function(event) {
+                        const cursor = event.target.result;
+                        if (cursor) {
+                            const sale = cursor.value;
+                            holdings[sale.cryptoId] = (holdings[sale.cryptoId] || 0) - sale.amount;
+                            cursor.continue();
+                        } else {
+                            // Ahora holdings tiene las cantidades disponibles
+                            const cryptoIds = Object.keys(holdings).filter(id => holdings[id] > 0);
+                            const cryptoData = {};
+
+                            if (cryptoIds.length === 0) {
+                                if (portfolioChart) {
+                                    portfolioChart.destroy();
+                                    portfolioChart = null;
+                                }
+                                return;
+                            }
+
+                            const cryptosTransaction = db.transaction(["cryptos"], "readonly");
+                            const cryptosStore = cryptosTransaction.objectStore("cryptos");
+                            let processed = 0;
+
+                            cryptoIds.forEach(id => {
+                                const cryptoRequest = cryptosStore.get(Number(id));
+                                cryptoRequest.onsuccess = function() {
+                                    const crypto = cryptoRequest.result;
+                                    if (crypto) {
+                                        cryptoData[crypto.name] = holdings[id].toFixed(4);
+                                    }
+                                    processed++;
+                                    if (processed === cryptoIds.length) {
+                                        const cryptoLabels = Object.keys(cryptoData);
+                                        const cryptoAmounts = Object.values(cryptoData);
+
+                                        updateChart(cryptoLabels, cryptoAmounts);
+                                    }
+                                };
+                            });
+                        }
+                    };
+                }
+            };
+        }
+
+        // Función para actualizar el gráfico de portafolio
+        function updateChart(cryptoLabels, cryptoAmounts) {
             const ctx = document.getElementById('portfolioChart').getContext('2d');
 
             if (portfolioChart) {
@@ -433,11 +937,7 @@
                     datasets: [{
                         label: 'Distribución del Portafolio',
                         data: cryptoAmounts,
-                        backgroundColor: [
-                            '#FF6384', '#36A2EB', '#FFCE56', '#ADFF2F', '#FFA07A',
-                            '#9370DB', '#00FA9A', '#6495ED', '#FFD700', '#D2691E',
-                            '#40E0D0', '#808000', '#FF69B4', '#8B0000'
-                        ],
+                        backgroundColor: cryptoLabels.map((_, index) => getRandomColor(index)),
                         borderColor: '#fff',
                         borderWidth: 2
                     }]
@@ -470,305 +970,407 @@
                     }
                 }
             });
-        };
+        }
 
-        const updateTables = () => {
-            const purchases = JSON.parse(db.getItem('purchases') || '[]');
-            const purchaseBody = document.getElementById('purchaseBody');
-            purchaseBody.innerHTML = '';
-            purchases.forEach(purchase => {
-                const row = `<tr>
-                    <td>${purchase.crypto}</td>
-                    <td>$${purchase.price.toFixed(2)}</td>
-                    <td>${purchase.amount}</td>
-                    <td>${new Date(purchase.date).toLocaleString()}</td>
-                </tr>`;
-                purchaseBody.innerHTML += row;
-            });
-
-            const sales = JSON.parse(db.getItem('sales') || '[]');
-            const salesBody = document.getElementById('salesBody');
-            salesBody.innerHTML = '';
-            let totalGain = 0;
-            sales.forEach((sale, index) => {
-                totalGain += sale.gain;
-                const row = `<tr>
-                    <td>${sale.crypto}</td>
-                    <td>$${sale.price.toFixed(2)}</td>
-                    <td>${sale.amount}</td>
-                    <td>$${sale.gain.toFixed(2)}</td>
-                    <td>${new Date(sale.date).toLocaleString()}</td>
-                    <td>
-                        <button class="btn btn-sm btn-info edit-sale-btn" data-index="${index}">Editar</button>
-                    </td>
-                </tr>`;
-                salesBody.innerHTML += row;
-            });
-
-            const totalGainElement = document.getElementById('totalGain');
-            totalGainElement.innerText = `Ganancias Totales: $${totalGain.toFixed(2)}`;
-
-            if (totalGain > 0) {
-                totalGainElement.classList.add('profit');
-                totalGainElement.classList.remove('loss');
-            } else if (totalGain < 0) {
-                totalGainElement.classList.add('loss');
-                totalGainElement.classList.remove('profit');
-            } else {
-                totalGainElement.classList.remove('profit', 'loss');
+        // Función para establecer porcentaje de venta
+        function setSellPercentage(percentage) {
+            const sellSelect = document.getElementById('sellSelect');
+            const cryptoId = parseInt(sellSelect.value, 10);
+            if (isNaN(cryptoId)) {
+                alert('Por favor, selecciona una criptomoneda para vender.');
+                return;
             }
 
-            const sellSelect = document.getElementById('sellSelect');
-            sellSelect.innerHTML = '';
-            const uniqueCryptos = purchases.reduce((acc, p) => {
-                acc[p.crypto] = (acc[p.crypto] || 0) + p.amount;
-                return acc;
-            }, {});
+            const holdings = {};
 
-            Object.entries(uniqueCryptos).forEach(([crypto, amount]) => {
-                const option = `<option value="${crypto}">${crypto} (${amount.toFixed(2)})</option>`;
-                sellSelect.innerHTML += option;
-            });
+            const transaction = db.transaction(["purchases", "sales"], "readonly");
+            const purchasesStore = transaction.objectStore("purchases");
+            const salesStore = transaction.objectStore("sales");
 
-            const cryptoLabels = Object.keys(uniqueCryptos);
-            const cryptoAmounts = Object.values(uniqueCryptos);
-            if (cryptoLabels.length > 0) {
-                updateChart(cryptoLabels, cryptoAmounts);
-            } else {
-                if (portfolioChart) {
-                    portfolioChart.destroy();
-                    portfolioChart = null;
+            const purchasesRequest = purchasesStore.openCursor();
+            purchasesRequest.onsuccess = function(event) {
+                const cursor = event.target.result;
+                if (cursor) {
+                    const purchase = cursor.value;
+                    // Acumular las compras por cryptoId
+                    holdings[purchase.cryptoId] = (holdings[purchase.cryptoId] || 0) + purchase.amount;
+                    cursor.continue();
+                } else {
+                    const salesRequest = salesStore.openCursor();
+                    salesRequest.onsuccess = function(event) {
+                        const cursor = event.target.result;
+                        if (cursor) {
+                            const sale = cursor.value;
+                            holdings[sale.cryptoId] = (holdings[sale.cryptoId] || 0) - sale.amount;
+                            cursor.continue();
+                        } else {
+                            // Ahora holdings tiene las cantidades disponibles
+                            const availableAmount = holdings[cryptoId] || 0;
+                            if (availableAmount <= 0) {
+                                alert('No tienes cantidad disponible para vender de esta criptomoneda.');
+                                document.getElementById('sellAmount').value = '';
+                                calculateSellGain();
+                                return;
+                            }
+                            console.log(`Disponible para vender (ID ${cryptoId}): ${availableAmount}`);
+                            const amountToSell = (availableAmount * percentage) / 100;
+                            console.log(`Cantidad a vender (${percentage}%): ${amountToSell}`);
+                            document.getElementById('sellAmount').value = amountToSell.toFixed(4);
+                            calculateSellGain();
+                        }
+                    };
                 }
-            }
-        };
+            };
+        }
 
-        const setSellPercentage = (percentage) => {
-            const sellSelect = document.getElementById('sellSelect');
-            const crypto = sellSelect.value;
-            const purchases = JSON.parse(db.getItem('purchases') || '[]');
-            const totalCrypto = purchases.filter(p => p.crypto === crypto).reduce((sum, p) => sum + p.amount, 0);
-            const amountToSell = (totalCrypto * percentage) / 100;
-            document.getElementById('sellAmount').value = amountToSell.toFixed(2);
-        };
-
+        // Función para registrar una compra
         document.getElementById('buyButton').addEventListener('click', () => {
-            const crypto = document.getElementById('cryptoSelect').value;
+            const cryptoId = parseInt(document.getElementById('cryptoSelect').value, 10);
             const price = parseFloat(document.getElementById('buyPrice').value);
             const amount = parseFloat(document.getElementById('buyAmount').value);
+            const moneyAmount = parseFloat(document.getElementById('moneyAmountBuy').value);
 
-            if (!isNaN(price) && price > 0 && !isNaN(amount) && amount > 0) {
-                const purchases = JSON.parse(db.getItem('purchases') || '[]');
-                purchases.push({ crypto, price, amount, date: new Date() });
-                db.setItem('purchases', JSON.stringify(purchases));
-                alert('Compra registrada con éxito');
-                clearFields();
-                updateTables();
+            if (isNaN(cryptoId)) {
+                alert('Por favor, selecciona una criptomoneda para comprar.');
+                return;
+            }
+
+            if (!isNaN(price) && price > 0 && !isNaN(amount) && amount > 0 && !isNaN(moneyAmount) && moneyAmount > 0) {
+                const transaction = db.transaction(["purchases"], "readwrite");
+                const purchasesStore = transaction.objectStore("purchases");
+                const newPurchase = { cryptoId, price, amount, date: new Date() };
+                purchasesStore.add(newPurchase);
+
+                transaction.oncomplete = function() {
+                    console.log('Compra registrada:', newPurchase);
+                    alert('Compra registrada con éxito');
+                    clearBuyFields();
+                    updateTables();
+                };
+
+                transaction.onerror = function(event) {
+                    console.error("Error al registrar la compra:", event.target.error);
+                    alert('Error al registrar la compra.');
+                };
             } else {
                 alert('Por favor, ingresa valores válidos para la compra.');
             }
         });
 
+        // Función para registrar una venta
         document.getElementById('sellButton').addEventListener('click', () => {
-            const crypto = document.getElementById('sellSelect').value;
+            const sellSelect = document.getElementById('sellSelect');
+            const cryptoId = parseInt(sellSelect.value, 10);
             const price = parseFloat(document.getElementById('sellPrice').value);
             const amount = parseFloat(document.getElementById('sellAmount').value);
 
+            console.log(`Registrar venta: Crypto ID ${cryptoId}, Precio $${price}, Cantidad ${amount}`);
+
+            if (isNaN(cryptoId)) {
+                alert('Por favor, selecciona una criptomoneda para vender.');
+                return;
+            }
+
             if (!isNaN(price) && price > 0 && !isNaN(amount) && amount > 0) {
-                const purchases = JSON.parse(db.getItem('purchases') || '[]');
-                const totalCrypto = purchases.filter(p => p.crypto === crypto).reduce((sum, p) => sum + p.amount, 0);
+                const transaction = db.transaction(["purchases", "sales"], "readwrite");
+                const purchasesStore = transaction.objectStore("purchases");
+                const salesStore = transaction.objectStore("sales");
 
-                if (amount <= totalCrypto) {
-                    const remainingPurchases = [];
-                    let remainingAmount = amount;
+                const holdings = {};
 
-                    purchases.forEach(purchase => {
-                        if (purchase.crypto === crypto && remainingAmount > 0) {
-                            const usedAmount = Math.min(remainingAmount, purchase.amount);
-                            purchase.amount -= usedAmount;
-                            remainingAmount -= usedAmount;
+                // Calcular holdings
+                const purchasesRequest = purchasesStore.openCursor();
+                purchasesRequest.onsuccess = function(event) {
+                    const cursor = event.target.result;
+                    if (cursor) {
+                        const purchase = cursor.value;
+                        // Acumular las compras por cryptoId
+                        holdings[purchase.cryptoId] = (holdings[purchase.cryptoId] || 0) + purchase.amount;
+                        cursor.continue();
+                    } else {
+                        const salesRequest = salesStore.openCursor();
+                        salesRequest.onsuccess = function(event) {
+                            const cursor = event.target.result;
+                            if (cursor) {
+                                const sale = cursor.value;
+                                holdings[sale.cryptoId] = (holdings[sale.cryptoId] || 0) - sale.amount;
+                                cursor.continue();
+                            } else {
+                                // Ahora holdings tiene las cantidades disponibles
+                                const availableAmount = holdings[cryptoId] || 0;
+                                console.log(`Disponible para vender (ID ${cryptoId}): ${availableAmount}`);
+                                if (availableAmount < amount) {
+                                    alert('No tienes suficiente cantidad para vender.');
+                                    return;
+                                }
 
-                            if (purchase.amount > 0) {
-                                remainingPurchases.push(purchase);
+                                // Obtener compras ordenadas por fecha (FIFO)
+                                const purchasesFIFO = [];
+                                const purchasesCursorRequest = purchasesStore.index("cryptoId").openCursor(IDBKeyRange.only(cryptoId), "next");
+                                purchasesCursorRequest.onsuccess = function(event) {
+                                    const cursor = event.target.result;
+                                    if (cursor) {
+                                        purchasesFIFO.push(cursor.value);
+                                        cursor.continue();
+                                    } else {
+                                        // Asociar ventas con compras
+                                        let remainingAmount = amount;
+                                        const associatedPurchases = [];
+
+                                        purchasesFIFO.forEach(purchase => {
+                                            if (remainingAmount <= 0) return;
+                                            if (purchase.amount <= remainingAmount) {
+                                                associatedPurchases.push({ purchaseId: purchase.id, amount: purchase.amount });
+                                                remainingAmount -= purchase.amount;
+                                                purchase.amount = 0;
+                                                purchasesStore.put(purchase); // Actualizar compra
+                                            } else {
+                                                associatedPurchases.push({ purchaseId: purchase.id, amount: remainingAmount });
+                                                purchase.amount -= remainingAmount;
+                                                purchasesStore.put(purchase); // Actualizar compra
+                                                remainingAmount = 0;
+                                            }
+                                        });
+
+                                        // Calcular la ganancia
+                                        let totalSpent = 0;
+                                        associatedPurchases.forEach(ap => {
+                                            const purchase = purchasesFIFO.find(p => p.id === ap.purchaseId);
+                                            if (purchase) {
+                                                totalSpent += purchase.price * ap.amount;
+                                            }
+                                        });
+                                        const averagePrice = totalSpent / amount;
+                                        const gain = (price - averagePrice) * amount;
+
+                                        // Registrar la venta
+                                        const newSale = { cryptoId, price, amount, gain, date: new Date(), associatedPurchases };
+                                        salesStore.add(newSale);
+
+                                        transaction.oncomplete = function() {
+                                            console.log('Venta registrada:', newSale);
+                                            alert('Venta registrada con éxito');
+                                            clearSellFields();
+                                            updateTables();
+                                        };
+
+                                        transaction.onerror = function(event) {
+                                            console.error("Error al registrar la venta:", event.target.error);
+                                            alert('Error al registrar la venta.');
+                                        };
+                                    }
+                                };
                             }
-                        } else {
-                            remainingPurchases.push(purchase);
-                        }
-                    });
-
-                    db.setItem('purchases', JSON.stringify(remainingPurchases));
-
-                    const cryptoPurchases = purchases.filter(p => p.crypto === crypto);
-                    const totalSpent = cryptoPurchases.reduce((sum, p) => sum + p.price * p.amount, 0);
-                    const totalAmount = cryptoPurchases.reduce((sum, p) => sum + p.amount, 0);
-                    const averagePrice = totalAmount > 0 ? totalSpent / totalAmount : 0;
-                    const gain = (price - averagePrice) * amount;
-
-                    const sales = JSON.parse(db.getItem('sales') || '[]');
-                    sales.push({ crypto, price, amount, gain, date: new Date() });
-                    db.setItem('sales', JSON.stringify(sales));
-
-                    alert('Venta registrada con éxito');
-                    clearFields();
-                    updateTables();
-                } else {
-                    alert('No tienes suficiente cantidad para vender.');
-                }
+                        };
+                    }
+                };
             } else {
                 alert('Por favor, ingresa valores válidos para la venta.');
             }
         });
 
-        document.getElementById('backupButton').addEventListener('click', () => {
-            const backupData = {
-                purchases: JSON.parse(db.getItem('purchases') || '[]'),
-                sales: JSON.parse(db.getItem('sales') || '[]')
-            };
-            const backupBlob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
-            const backupLink = document.createElement('a');
-            backupLink.href = URL.createObjectURL(backupBlob);
-            backupLink.download = 'backup.json';
-            backupLink.click();
-        });
+        // Función para calcular la cantidad comprada
+        function calculateBuyAmount() {
+            const moneyAmount = parseFloat(document.getElementById('moneyAmountBuy').value);
+            const buyPrice = parseFloat(document.getElementById('buyPrice').value);
+            const buyAmount = document.getElementById('buyAmount');
 
-        document.getElementById('restoreButton').addEventListener('click', () => {
-            const fileInput = document.createElement('input');
-            fileInput.type = 'file';
-            fileInput.accept = '.json';
-            fileInput.click();
-
-            fileInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (!file) {
-                    alert('No se seleccionó ningún archivo.');
-                    return;
-                }
-                const reader = new FileReader();
-                reader.readAsText(file);
-
-                reader.onload = () => {
-                    try {
-                        const restoredData = JSON.parse(reader.result);
-                        if (restoredData.purchases && restoredData.sales) {
-                            db.setItem('purchases', JSON.stringify(restoredData.purchases));
-                            db.setItem('sales', JSON.stringify(restoredData.sales));
-                            alert('Datos restaurados con éxito');
-                            updateTables();
-                        } else {
-                            alert('El archivo no tiene el formato correcto.');
-                        }
-                    } catch (error) {
-                        alert('Error al restaurar los datos: ' + error.message);
-                    }
-                };
-
-                reader.onerror = () => {
-                    alert('Error al leer el archivo.');
-                };
-            });
-        });
-
-        document.getElementById('resetButton').addEventListener('click', () => {
-            if (confirm('¿Estás seguro de que deseas reiniciar la base de datos? Esta acción no se puede deshacer.')) {
-                db.clear();
-                alert('Base de datos reiniciada');
-                updateTables();
+            if (!isNaN(moneyAmount) && moneyAmount > 0 && !isNaN(buyPrice) && buyPrice > 0) {
+                const calculatedAmount = moneyAmount / buyPrice;
+                buyAmount.value = calculatedAmount.toFixed(4);
+            } else {
+                buyAmount.value = '';
             }
-        });
-
-        window.onload = updateTables;
-
-        /* Funciones de la Calculadora de Criptomonedas */
-
-        function calculateCoinsAndSetQuantityCalc() {
-            const moneyAmount = parseFloat(document.getElementById('moneyAmountCalc').value);
-            const purchasePrice = parseFloat(document.getElementById('purchasePriceCalc').value);
-
-            const errorDiv = document.getElementById('calcError');
-            const quantityInput = document.getElementById('quantityCalc');
-
-            errorDiv.style.display = 'none';
-            quantityInput.value = '';
-
-            if (isNaN(moneyAmount) || isNaN(purchasePrice) || moneyAmount <= 0 || purchasePrice <= 0) {
-                errorDiv.innerText = 'Por favor, ingrese valores válidos en Monto de Dinero y Precio de Compra.';
-                errorDiv.style.display = 'block';
-                return;
-            }
-
-            const coinsCanBuy = moneyAmount / purchasePrice;
-            quantityInput.value = coinsCanBuy.toFixed(3);
-
-            calculateProfitCalc();
         }
 
-        function calculateProfitCalc() {
-            const purchasePrice = parseFloat(document.getElementById('purchasePriceCalc').value);
-            const quantity = parseFloat(document.getElementById('quantityCalc').value);
-            const currentPrice = parseFloat(document.getElementById('currentPriceCalc').value);
+        // Función para calcular la ganancia/pérdida estimada en la venta
+        function calculateSellGain() {
+            const sellPrice = parseFloat(document.getElementById('sellPrice').value);
+            const sellAmount = parseFloat(document.getElementById('sellAmount').value);
+            const sellGain = document.getElementById('sellGain');
+            const purchasePrice = document.getElementById('purchasePrice');
 
-            const errorDiv = document.getElementById('calcError');
-            const resultDiv = document.getElementById('calcResult');
-
-            errorDiv.style.display = 'none';
-            resultDiv.style.display = 'none';
-
-            if (isNaN(purchasePrice) || isNaN(quantity) || isNaN(currentPrice) || quantity <= 0) {
-                if (!isNaN(currentPrice)) {
-                    errorDiv.innerText = 'Por favor, ingrese valores válidos en todos los campos necesarios.';
-                    errorDiv.style.display = 'block';
+            if (!isNaN(sellPrice) && sellPrice > 0 && !isNaN(sellAmount) && sellAmount > 0) {
+                const cryptoId = parseInt(document.getElementById('sellSelect').value, 10);
+                if (isNaN(cryptoId)) {
+                    sellGain.value = '';
+                    purchasePrice.value = '';
+                    return;
                 }
-                return;
-            }
 
-            const totalPurchase = purchasePrice * quantity;
-            const totalCurrentValue = currentPrice * quantity;
-            const profit = totalCurrentValue - totalPurchase;
+                const transaction = db.transaction(["purchases", "sales"], "readonly");
+                const purchasesStore = transaction.objectStore("purchases");
+                const salesStore = transaction.objectStore("sales");
 
-            resultDiv.style.display = 'block';
-            resultDiv.innerText = `Ganancia Total: $${profit.toFixed(2)}`;
+                let totalSpent = 0;
+                let totalAmount = 0;
 
-            if (profit > 0) {
-                resultDiv.style.color = '#0000FF'; // Azul para ganancia
-            } else if (profit < 0) {
-                resultDiv.style.color = '#FF0000'; // Rojo para pérdida
+                // Calcular holdings
+                const purchasesRequest = purchasesStore.openCursor();
+                purchasesRequest.onsuccess = function(event) {
+                    const cursor = event.target.result;
+                    if (cursor) {
+                        const purchase = cursor.value;
+                        if (purchase.cryptoId === cryptoId) {
+                            totalSpent += purchase.price * purchase.amount;
+                            totalAmount += purchase.amount;
+                        }
+                        cursor.continue();
+                    } else {
+                        const salesRequest = salesStore.openCursor();
+                        salesRequest.onsuccess = function(event) {
+                            const cursor = event.target.result;
+                            if (cursor) {
+                                const sale = cursor.value;
+                                if (sale.cryptoId === cryptoId) {
+                                    totalSpent -= sale.price * sale.amount;
+                                    totalAmount -= sale.amount;
+                                }
+                                cursor.continue();
+                            } else {
+                                const averagePrice = totalAmount > 0 ? totalSpent / totalAmount : 0;
+                                const gain = (sellPrice - averagePrice) * sellAmount;
+                                sellGain.value = gain.toFixed(2);
+                                purchasePrice.value = averagePrice.toFixed(2);
+                            }
+                        };
+                    }
+                };
             } else {
-                resultDiv.style.color = '#333'; // Color neutro
+                sellGain.value = '';
+                purchasePrice.value = '';
             }
+        }
+
+        // Función para actualizar la ganancia en el modal de edición de ventas
+        function updateEditSellGain() {
+            const newPrice = parseFloat(document.getElementById('editSellPrice').value);
+            const newAmount = parseFloat(document.getElementById('editSellAmount').value);
+            const editSellGain = document.getElementById('editSellGain');
+            const cryptoId = parseInt(document.getElementById('editSellCrypto').value, 10);
+
+            if (!isNaN(newPrice) && newPrice > 0 && !isNaN(newAmount) && newAmount > 0 && !isNaN(cryptoId)) {
+                const transaction = db.transaction(["purchases", "sales"], "readonly");
+                const purchasesStore = transaction.objectStore("purchases");
+                const salesStore = transaction.objectStore("sales");
+
+                let totalSpent = 0;
+                let totalAmount = 0;
+
+                // Calcular holdings
+                const purchasesRequest = purchasesStore.openCursor();
+                purchasesRequest.onsuccess = function(event) {
+                    const cursor = event.target.result;
+                    if (cursor) {
+                        const purchase = cursor.value;
+                        if (purchase.cryptoId === cryptoId) {
+                            totalSpent += purchase.price * purchase.amount;
+                            totalAmount += purchase.amount;
+                        }
+                        cursor.continue();
+                    } else {
+                        const salesRequest = salesStore.openCursor();
+                        salesRequest.onsuccess = function(event) {
+                            const cursor = event.target.result;
+                            if (cursor) {
+                                const sale = cursor.value;
+                                if (sale.cryptoId === cryptoId) {
+                                    totalSpent -= sale.price * sale.amount;
+                                    totalAmount -= sale.amount;
+                                }
+                                cursor.continue();
+                            } else {
+                                const averagePrice = totalAmount > 0 ? totalSpent / totalAmount : 0;
+                                const gain = (newPrice - averagePrice) * newAmount;
+                                editSellGain.value = gain.toFixed(2);
+                            }
+                        };
+                    }
+                };
+            } else {
+                editSellGain.value = '';
+            }
+        }
+
+        // Función para limpiar los campos de compra después de registrar
+        function clearBuyFields() {
+            document.getElementById('buyPrice').value = '';
+            document.getElementById('moneyAmountBuy').value = '';
+            document.getElementById('buyAmount').value = '';
+            $('#cryptoSelect').val(null).trigger('change');
+        }
+
+        // Función para limpiar los campos de venta después de registrar
+        function clearSellFields() {
+            document.getElementById('sellPrice').value = '';
+            document.getElementById('sellAmount').value = '';
+            document.getElementById('sellGain').value = '';
+            document.getElementById('purchasePrice').value = '';
+            $('#sellSelect').val(null).trigger('change');
         }
 
         /* Funciones para Editar Ventas */
 
-        document.getElementById('salesBody').addEventListener('click', function(event) {
+        // Event delegation para botones de editar venta
+        document.getElementById('salesHistoryBody').addEventListener('click', function(event) {
             if (event.target && event.target.matches('button.edit-sale-btn')) {
-                const saleIndex = event.target.getAttribute('data-index');
-                openEditSaleModal(saleIndex);
+                const saleId = parseInt(event.target.getAttribute('data-sale-id'), 10);
+                openEditSaleModal(saleId);
             }
         });
 
-        function openEditSaleModal(index) {
-            const sales = JSON.parse(db.getItem('sales') || '[]');
-            const sale = sales[index];
+        function openEditSaleModal(saleId) {
+            const transaction = db.transaction(["sales", "cryptos"], "readonly");
+            const salesStore = transaction.objectStore("sales");
+            const cryptosStore = transaction.objectStore("cryptos");
+            const saleRequest = salesStore.get(saleId);
 
-            if (!sale) {
-                alert('Venta no encontrada.');
-                return;
-            }
+            saleRequest.onsuccess = function(event) {
+                const sale = event.target.result;
+                if (!sale) {
+                    alert('Venta no encontrada.');
+                    return;
+                }
 
-            document.getElementById('editSaleIndex').value = index;
-            document.getElementById('editSellPrice').value = sale.price.toFixed(2);
-            document.getElementById('editSellAmount').value = sale.amount.toFixed(3);
-            document.getElementById('editSellCrypto').value = sale.crypto;
+                const cryptoRequest = cryptosStore.get(sale.cryptoId);
+                cryptoRequest.onsuccess = function() {
+                    const crypto = cryptoRequest.result;
+                    if (!crypto) {
+                        alert('Criptomoneda asociada no encontrada.');
+                        return;
+                    }
 
-            $('#editSaleModal').modal('show');
+                    document.getElementById('editSaleId').value = sale.id;
+                    document.getElementById('editSellPrice').value = sale.price.toFixed(2);
+                    document.getElementById('editSellAmount').value = sale.amount.toFixed(4);
+                    document.getElementById('editSellCrypto').value = sale.cryptoId;
+                    document.getElementById('editSellGain').value = sale.gain.toFixed(2);
+
+                    // Inicializar Select2 en el modal de edición de ventas
+                    $('#editSellCrypto').select2({
+                        placeholder: "Selecciona una Criptomoneda",
+                        allowClear: true,
+                        width: '100%'
+                    });
+
+                    $('#editSellCrypto').val(sale.cryptoId).trigger('change');
+
+                    // Deshabilitar el selector de criptomonedas en el modal de edición
+                    $('#editSellCrypto').prop('disabled', true);
+
+                    $('#editSaleModal').modal('show');
+                };
+            };
         }
 
         document.getElementById('editSaleForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
-            const index = parseInt(document.getElementById('editSaleIndex').value);
+            const saleId = parseInt(document.getElementById('editSaleId').value, 10);
             const newPrice = parseFloat(document.getElementById('editSellPrice').value);
             const newAmount = parseFloat(document.getElementById('editSellAmount').value);
-            const crypto = document.getElementById('editSellCrypto').value;
+            const cryptoId = parseInt(document.getElementById('editSellCrypto').value, 10);
+            const newGain = parseFloat(document.getElementById('editSellGain').value);
 
             const errorDiv = document.getElementById('editError');
             errorDiv.innerText = '';
@@ -780,60 +1382,601 @@
                 return;
             }
 
-            const sales = JSON.parse(db.getItem('sales') || '[]');
-            const originalSale = sales[index];
+            const transaction = db.transaction(["sales", "purchases"], "readwrite");
+            const salesStore = transaction.objectStore("sales");
+            const saleRequest = salesStore.get(saleId);
 
-            if (!originalSale) {
-                alert('Venta no encontrada.');
-                $('#editSaleModal').modal('hide');
-                return;
-            }
-
-            const amountDifference = newAmount - originalSale.amount;
-
-            if (amountDifference > 0) {
-                const purchases = JSON.parse(db.getItem('purchases') || '[]');
-                const totalCrypto = purchases.filter(p => p.crypto === crypto).reduce((sum, p) => sum + p.amount, 0);
-                if (amountDifference > totalCrypto) {
-                    errorDiv.innerText = 'No tienes suficiente cantidad para aumentar la venta.';
-                    errorDiv.style.display = 'block';
+            saleRequest.onsuccess = function(event) {
+                const sale = event.target.result;
+                if (!sale) {
+                    alert('Venta no encontrada.');
+                    $('#editSaleModal').modal('hide');
                     return;
                 }
 
-                let remainingAmount = amountDifference;
-                const updatedPurchases = [];
-                for (let i = 0; i < purchases.length; i++) {
-                    const purchase = purchases[i];
-                    if (purchase.crypto === crypto && remainingAmount > 0) {
-                        const usedAmount = Math.min(remainingAmount, purchase.amount);
-                        purchase.amount -= usedAmount;
-                        remainingAmount -= usedAmount;
-                        if (purchase.amount > 0) {
-                            updatedPurchases.push(purchase);
+                const originalAmount = sale.amount;
+                const amountDifference = newAmount - originalAmount;
+
+                const purchasesStore = transaction.objectStore("purchases");
+
+                if (amountDifference > 0) {
+                    // Necesita vender más
+                    let remainingAmount = amountDifference;
+                    const associatedPurchases = [];
+
+                    // Obtener compras ordenadas por fecha (FIFO)
+                    const purchasesRequest = purchasesStore.index("cryptoId").openCursor(IDBKeyRange.only(cryptoId), "next");
+                    purchasesRequest.onsuccess = function(event) {
+                        const cursor = event.target.result;
+                        if (cursor && remainingAmount > 0) {
+                            const purchase = cursor.value;
+                            if (purchase.amount <= remainingAmount) {
+                                associatedPurchases.push({ purchaseId: purchase.id, amount: purchase.amount });
+                                remainingAmount -= purchase.amount;
+                                purchase.amount = 0;
+                                purchasesStore.put(purchase);
+                            } else {
+                                associatedPurchases.push({ purchaseId: purchase.id, amount: remainingAmount });
+                                purchase.amount -= remainingAmount;
+                                purchasesStore.put(purchase);
+                                remainingAmount = 0;
+                            }
+                            cursor.continue();
+                        } else {
+                            if (remainingAmount > 0) {
+                                alert('No tienes suficiente cantidad para aumentar la venta.');
+                                return;
+                            }
+
+                            // Actualizar ventas
+                            sale.amount = newAmount;
+                            sale.price = newPrice;
+                            sale.gain = newGain;
+                            sale.associatedPurchases.push(...associatedPurchases);
+
+                            salesStore.put(sale);
+
+                            transaction.oncomplete = function() {
+                                console.log('Venta modificada:', sale);
+                                alert('Venta modificada con éxito.');
+                                $('#editSaleModal').modal('hide');
+                                updateTables();
+                            };
+
+                            transaction.onerror = function(event) {
+                                console.error("Error al modificar la venta:", event.target.error);
+                                alert('Error al modificar la venta.');
+                            };
                         }
-                    } else {
-                        updatedPurchases.push(purchase);
-                    }
+                    };
+                } else if (amountDifference < 0) {
+                    // Necesita vender menos
+                    let remainingAmount = Math.abs(amountDifference);
+                    const associatedPurchases = sale.associatedPurchases;
+
+                    const processReduction = (index) => {
+                        if (index >= associatedPurchases.length || remainingAmount <= 0) return;
+
+                        const ap = associatedPurchases[index];
+                        const purchaseRequest = purchasesStore.get(ap.purchaseId);
+                        purchaseRequest.onsuccess = function(event) {
+                            const purchase = event.target.result;
+                            if (purchase) {
+                                if (ap.amount <= remainingAmount) {
+                                    purchase.amount += ap.amount;
+                                    purchasesStore.put(purchase);
+                                    remainingAmount -= ap.amount;
+                                    sale.associatedPurchases.splice(index, 1);
+                                } else {
+                                    purchase.amount += remainingAmount;
+                                    purchasesStore.put(purchase);
+                                    sale.associatedPurchases[index].amount -= remainingAmount;
+                                    remainingAmount = 0;
+                                }
+                            }
+
+                            processReduction(index);
+                        };
+                    };
+
+                    processReduction(0);
+
+                    // Actualizar ventas
+                    sale.amount = newAmount;
+                    sale.price = newPrice;
+                    sale.gain = newGain;
+
+                    salesStore.put(sale);
+
+                    transaction.oncomplete = function() {
+                        console.log('Venta modificada:', sale);
+                        alert('Venta modificada con éxito.');
+                        $('#editSaleModal').modal('hide');
+                        updateTables();
+                    };
+
+                    transaction.onerror = function(event) {
+                        console.error("Error al modificar la venta:", event.target.error);
+                        alert('Error al modificar la venta.');
+                    };
+                } else {
+                    // No hay diferencia en la cantidad
+                    sale.price = newPrice;
+                    sale.gain = newGain;
+
+                    salesStore.put(sale);
+
+                    transaction.oncomplete = function() {
+                        console.log('Venta modificada:', sale);
+                        alert('Venta modificada con éxito.');
+                        $('#editSaleModal').modal('hide');
+                        updateTables();
+                    };
+
+                    transaction.onerror = function(event) {
+                        console.error("Error al modificar la venta:", event.target.error);
+                        alert('Error al modificar la venta.');
+                    };
                 }
-                db.setItem('purchases', JSON.stringify(updatedPurchases));
-            } else if (amountDifference < 0) {
-                let remainingAmount = Math.abs(amountDifference);
-                const purchases = JSON.parse(db.getItem('purchases') || '[]');
-                purchases.push({ crypto, price: originalSale.price, amount: remainingAmount, date: new Date() });
-                db.setItem('purchases', JSON.stringify(purchases));
+            };
+        });
+
+        /* Funciones para Añadir Criptomoneda */
+        document.getElementById('addCryptoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const newCryptoName = document.getElementById('newCryptoName').value.trim().toUpperCase();
+            const errorDiv = document.getElementById('addCryptoError');
+            errorDiv.style.display = 'none';
+            errorDiv.innerText = '';
+
+            if (newCryptoName === '') {
+                errorDiv.innerText = 'El nombre de la criptomoneda no puede estar vacío.';
+                errorDiv.style.display = 'block';
+                return;
             }
 
-            sales[index].price = newPrice;
-            sales[index].amount = newAmount;
+            const transaction = db.transaction(["cryptos"], "readwrite");
+            const cryptosStore = transaction.objectStore("cryptos");
+            const index = cryptosStore.index("name");
+            const request = index.get(newCryptoName);
 
-            const averagePrice = originalSale.gain / originalSale.amount + originalSale.price;
-            sales[index].gain = (newPrice - averagePrice) * newAmount;
+            request.onsuccess = function(event) {
+                if (event.target.result) {
+                    errorDiv.innerText = 'Esta criptomoneda ya existe.';
+                    errorDiv.style.display = 'block';
+                } else {
+                    cryptosStore.add({ name: newCryptoName });
 
-            db.setItem('sales', JSON.stringify(sales));
+                    transaction.oncomplete = function() {
+                        console.log(`Criptomoneda añadida: ${newCryptoName}`);
+                        alert(`Criptomoneda ${newCryptoName} añadida con éxito.`);
+                        $('#addCryptoModal').modal('hide');
+                        loadCryptos();
+                        updateTables();
+                    };
 
-            alert('Venta modificada con éxito.');
-            $('#editSaleModal').modal('hide');
-            updateTables();
+                    transaction.onerror = function(event) {
+                        console.error("Error al añadir criptomoneda:", event.target.error);
+                        alert('Error al añadir la criptomoneda.');
+                    };
+                }
+            };
+
+            request.onerror = function(event) {
+                console.error("Error al verificar criptomoneda:", event.target.error);
+                alert('Error al verificar la criptomoneda.');
+            };
+        });
+
+        /* Funciones para Editar y Eliminar Criptomoneda */
+
+        // Event delegation para botones de editar y eliminar criptomoneda
+        document.getElementById('manageCryptoBody').addEventListener('click', function(event) {
+            if (event.target && event.target.matches('button.edit-crypto-btn')) {
+                const cryptoId = parseInt(event.target.getAttribute('data-crypto-id'), 10);
+                const cryptoName = event.target.getAttribute('data-crypto-name');
+                openEditCryptoModal(cryptoId, cryptoName);
+            }
+
+            if (event.target && event.target.matches('button.delete-crypto-btn')) {
+                const cryptoId = parseInt(event.target.getAttribute('data-crypto-id'), 10);
+                const cryptoName = event.target.getAttribute('data-crypto-name');
+                deleteCrypto(cryptoId, cryptoName);
+            }
+        });
+
+        // Función para abrir el modal de edición de criptomoneda
+        function openEditCryptoModal(cryptoId, cryptoName) {
+            document.getElementById('editCryptoId').value = cryptoId;
+            document.getElementById('editCryptoName').value = cryptoName;
+            $('#editCryptoModal').modal('show');
+        }
+
+        // Función para editar criptomoneda
+        document.getElementById('editCryptoForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const cryptoId = parseInt(document.getElementById('editCryptoId').value, 10);
+            const newCryptoName = document.getElementById('editCryptoName').value.trim().toUpperCase();
+            const errorDiv = document.getElementById('editCryptoError');
+            errorDiv.style.display = 'none';
+            errorDiv.innerText = '';
+
+            if (newCryptoName === '') {
+                errorDiv.innerText = 'El nombre de la criptomoneda no puede estar vacío.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            const transaction = db.transaction(["cryptos"], "readwrite");
+            const cryptosStore = transaction.objectStore("cryptos");
+            const index = cryptosStore.index("name");
+            const request = index.get(newCryptoName);
+
+            request.onsuccess = function(event) {
+                const existingCrypto = event.target.result;
+                if (existingCrypto && existingCrypto.id !== cryptoId) {
+                    errorDiv.innerText = 'Esta criptomoneda ya existe.';
+                    errorDiv.style.display = 'block';
+                } else {
+                    const cryptoRequest = cryptosStore.get(cryptoId);
+                    cryptoRequest.onsuccess = function() {
+                        const crypto = cryptoRequest.result;
+                        if (!crypto) {
+                            alert('Criptomoneda no encontrada.');
+                            return;
+                        }
+                        crypto.name = newCryptoName;
+                        cryptosStore.put(crypto);
+
+                        transaction.oncomplete = function() {
+                            console.log(`Criptomoneda editada: ID ${cryptoId}, Nuevo Nombre ${newCryptoName}`);
+                            alert('Criptomoneda editada con éxito.');
+                            $('#editCryptoModal').modal('hide');
+                            loadCryptos();
+                            updateTables();
+                        };
+
+                        transaction.onerror = function(event) {
+                            console.error("Error al editar criptomoneda:", event.target.error);
+                            alert('Error al editar la criptomoneda.');
+                        };
+                    };
+                }
+            };
+
+            request.onerror = function(event) {
+                console.error("Error al verificar criptomoneda:", event.target.error);
+                alert('Error al verificar la criptomoneda.');
+            };
+        });
+
+        // Función para eliminar criptomoneda
+        function deleteCrypto(cryptoId, cryptoName) {
+            if (!confirm(`¿Estás seguro de que deseas eliminar la criptomoneda ${cryptoName}? Esto también eliminará todas las compras y ventas asociadas.`)) {
+                return;
+            }
+
+            const transaction = db.transaction(["cryptos", "purchases", "sales"], "readwrite");
+            const cryptosStore = transaction.objectStore("cryptos");
+            const purchasesStore = transaction.objectStore("purchases");
+            const salesStore = transaction.objectStore("sales");
+
+            // Eliminar criptomoneda
+            cryptosStore.delete(cryptoId);
+
+            // Eliminar compras asociadas
+            const purchasesRequest = purchasesStore.index("cryptoId").openCursor(IDBKeyRange.only(cryptoId));
+            purchasesRequest.onsuccess = function(event) {
+                const cursor = event.target.result;
+                if (cursor) {
+                    purchasesStore.delete(cursor.primaryKey);
+                    cursor.continue();
+                }
+            };
+
+            // Eliminar ventas asociadas
+            const salesRequest = salesStore.index("cryptoId").openCursor(IDBKeyRange.only(cryptoId));
+            salesRequest.onsuccess = function(event) {
+                const cursor = event.target.result;
+                if (cursor) {
+                    salesStore.delete(cursor.primaryKey);
+                    cursor.continue();
+                }
+            };
+
+            transaction.oncomplete = function() {
+                console.log(`Criptomoneda eliminada: ${cryptoName}`);
+                alert(`Criptomoneda ${cryptoName} eliminada con éxito.`);
+                loadCryptos();
+                updateTables();
+            };
+
+            transaction.onerror = function(event) {
+                console.error("Error al eliminar criptomoneda:", event.target.error);
+                alert('Error al eliminar la criptomoneda.');
+            };
+        }
+
+        /* Funciones para Editar Ventas */
+
+        // Event delegation para botones de editar venta
+        document.getElementById('salesHistoryBody').addEventListener('click', function(event) {
+            if (event.target && event.target.matches('button.edit-sale-btn')) {
+                const saleId = parseInt(event.target.getAttribute('data-sale-id'), 10);
+                openEditSaleModal(saleId);
+            }
+        });
+
+        function openEditSaleModal(saleId) {
+            const transaction = db.transaction(["sales", "cryptos"], "readonly");
+            const salesStore = transaction.objectStore("sales");
+            const cryptosStore = transaction.objectStore("cryptos");
+            const saleRequest = salesStore.get(saleId);
+
+            saleRequest.onsuccess = function(event) {
+                const sale = event.target.result;
+                if (!sale) {
+                    alert('Venta no encontrada.');
+                    return;
+                }
+
+                const cryptoRequest = cryptosStore.get(sale.cryptoId);
+                cryptoRequest.onsuccess = function() {
+                    const crypto = cryptoRequest.result;
+                    if (!crypto) {
+                        alert('Criptomoneda asociada no encontrada.');
+                        return;
+                    }
+
+                    document.getElementById('editSaleId').value = sale.id;
+                    document.getElementById('editSellPrice').value = sale.price.toFixed(2);
+                    document.getElementById('editSellAmount').value = sale.amount.toFixed(4);
+                    document.getElementById('editSellCrypto').value = sale.cryptoId;
+                    document.getElementById('editSellGain').value = sale.gain.toFixed(2);
+
+                    // Inicializar Select2 en el modal de edición de ventas
+                    $('#editSellCrypto').select2({
+                        placeholder: "Selecciona una Criptomoneda",
+                        allowClear: true,
+                        width: '100%'
+                    });
+
+                    $('#editSellCrypto').val(sale.cryptoId).trigger('change');
+
+                    // Deshabilitar el selector de criptomonedas en el modal de edición
+                    $('#editSellCrypto').prop('disabled', true);
+
+                    $('#editSaleModal').modal('show');
+                };
+            };
+        }
+
+        document.getElementById('editSaleForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const saleId = parseInt(document.getElementById('editSaleId').value, 10);
+            const newPrice = parseFloat(document.getElementById('editSellPrice').value);
+            const newAmount = parseFloat(document.getElementById('editSellAmount').value);
+            const cryptoId = parseInt(document.getElementById('editSellCrypto').value, 10);
+            const newGain = parseFloat(document.getElementById('editSellGain').value);
+
+            const errorDiv = document.getElementById('editError');
+            errorDiv.innerText = '';
+            errorDiv.style.display = 'none';
+
+            if (isNaN(newPrice) || newPrice <= 0 || isNaN(newAmount) || newAmount <= 0) {
+                errorDiv.innerText = 'Por favor, ingresa valores válidos para Precio de Venta y Cantidad.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            const transaction = db.transaction(["sales", "purchases"], "readwrite");
+            const salesStore = transaction.objectStore("sales");
+            const saleRequest = salesStore.get(saleId);
+
+            saleRequest.onsuccess = function(event) {
+                const sale = event.target.result;
+                if (!sale) {
+                    alert('Venta no encontrada.');
+                    $('#editSaleModal').modal('hide');
+                    return;
+                }
+
+                const originalAmount = sale.amount;
+                const amountDifference = newAmount - originalAmount;
+
+                const purchasesStore = transaction.objectStore("purchases");
+
+                if (amountDifference > 0) {
+                    // Necesita vender más
+                    let remainingAmount = amountDifference;
+                    const associatedPurchases = [];
+
+                    // Obtener compras ordenadas por fecha (FIFO)
+                    const purchasesRequest = purchasesStore.index("cryptoId").openCursor(IDBKeyRange.only(cryptoId), "next");
+                    purchasesRequest.onsuccess = function(event) {
+                        const cursor = event.target.result;
+                        if (cursor && remainingAmount > 0) {
+                            const purchase = cursor.value;
+                            if (purchase.amount <= remainingAmount) {
+                                associatedPurchases.push({ purchaseId: purchase.id, amount: purchase.amount });
+                                remainingAmount -= purchase.amount;
+                                purchase.amount = 0;
+                                purchasesStore.put(purchase);
+                            } else {
+                                associatedPurchases.push({ purchaseId: purchase.id, amount: remainingAmount });
+                                purchase.amount -= remainingAmount;
+                                purchasesStore.put(purchase);
+                                remainingAmount = 0;
+                            }
+                            cursor.continue();
+                        } else {
+                            if (remainingAmount > 0) {
+                                alert('No tienes suficiente cantidad para aumentar la venta.');
+                                return;
+                            }
+
+                            // Actualizar ventas
+                            sale.amount = newAmount;
+                            sale.price = newPrice;
+                            sale.gain = newGain;
+                            sale.associatedPurchases.push(...associatedPurchases);
+
+                            salesStore.put(sale);
+
+                            transaction.oncomplete = function() {
+                                console.log('Venta modificada:', sale);
+                                alert('Venta modificada con éxito.');
+                                $('#editSaleModal').modal('hide');
+                                updateTables();
+                            };
+
+                            transaction.onerror = function(event) {
+                                console.error("Error al modificar la venta:", event.target.error);
+                                alert('Error al modificar la venta.');
+                            };
+                        }
+                    };
+                } else if (amountDifference < 0) {
+                    // Necesita vender menos
+                    let remainingAmount = Math.abs(amountDifference);
+                    const associatedPurchases = sale.associatedPurchases;
+
+                    const processReduction = (index) => {
+                        if (index >= associatedPurchases.length || remainingAmount <= 0) return;
+
+                        const ap = associatedPurchases[index];
+                        const purchaseRequest = purchasesStore.get(ap.purchaseId);
+                        purchaseRequest.onsuccess = function(event) {
+                            const purchase = event.target.result;
+                            if (purchase) {
+                                if (ap.amount <= remainingAmount) {
+                                    purchase.amount += ap.amount;
+                                    purchasesStore.put(purchase);
+                                    remainingAmount -= ap.amount;
+                                    sale.associatedPurchases.splice(index, 1);
+                                } else {
+                                    purchase.amount += remainingAmount;
+                                    purchasesStore.put(purchase);
+                                    sale.associatedPurchases[index].amount -= remainingAmount;
+                                    remainingAmount = 0;
+                                }
+                            }
+
+                            processReduction(index);
+                        };
+                    };
+
+                    processReduction(0);
+
+                    // Actualizar ventas
+                    sale.amount = newAmount;
+                    sale.price = newPrice;
+                    sale.gain = newGain;
+
+                    salesStore.put(sale);
+
+                    transaction.oncomplete = function() {
+                        console.log('Venta modificada:', sale);
+                        alert('Venta modificada con éxito.');
+                        $('#editSaleModal').modal('hide');
+                        updateTables();
+                    };
+
+                    transaction.onerror = function(event) {
+                        console.error("Error al modificar la venta:", event.target.error);
+                        alert('Error al modificar la venta.');
+                    };
+                } else {
+                    // No hay diferencia en la cantidad
+                    sale.price = newPrice;
+                    sale.gain = newGain;
+
+                    salesStore.put(sale);
+
+                    transaction.oncomplete = function() {
+                        console.log('Venta modificada:', sale);
+                        alert('Venta modificada con éxito.');
+                        $('#editSaleModal').modal('hide');
+                        updateTables();
+                    };
+
+                    transaction.onerror = function(event) {
+                        console.error("Error al modificar la venta:", event.target.error);
+                        alert('Error al modificar la venta.');
+                    };
+                }
+            };
+        });
+
+        /* Funciones para Gestionar Criptomonedas en el Modal */
+        // Ya implementado anteriormente
+
+        /* Funciones para Reiniciar la Base de Datos */
+
+        document.getElementById('resetButton').addEventListener('click', () => {
+            if (confirm('¿Estás seguro de que deseas reiniciar la base de datos? Esta acción eliminará todos tus registros y no se puede deshacer.')) {
+                // Cerrar la conexión actual
+                if (db) {
+                    db.close();
+                }
+
+                // Eliminar la base de datos
+                const deleteRequest = indexedDB.deleteDatabase(dbName);
+
+                deleteRequest.onerror = function(event) {
+                    console.error("Error al eliminar la base de datos:", event.target.error);
+                    alert('Error al reiniciar la base de datos.');
+                };
+
+                deleteRequest.onsuccess = function(event) {
+                    console.log('Base de datos eliminada con éxito.');
+                    alert('Base de datos reiniciada con éxito.');
+
+                    // Reabrir la base de datos
+                    const newRequest = indexedDB.open(dbName, dbVersion);
+
+                    newRequest.onerror = function(event) {
+                        console.error("Error al abrir IndexedDB después de reiniciar:", event.target.errorCode);
+                        alert("Error al abrir la base de datos después de reiniciar.");
+                    };
+
+                    newRequest.onsuccess = function(event) {
+                        db = event.target.result;
+                        loadCryptos();
+                        updateTables();
+                    };
+
+                    newRequest.onupgradeneeded = function(event) {
+                        db = event.target.result;
+
+                        if (!db.objectStoreNames.contains("cryptos")) {
+                            const cryptosStore = db.createObjectStore("cryptos", { keyPath: "id", autoIncrement: true });
+                            cryptosStore.createIndex("name", "name", { unique: true });
+                        }
+
+                        if (!db.objectStoreNames.contains("purchases")) {
+                            const purchasesStore = db.createObjectStore("purchases", { keyPath: "id", autoIncrement: true });
+                            purchasesStore.createIndex("cryptoId", "cryptoId", { unique: false });
+                        }
+
+                        if (!db.objectStoreNames.contains("sales")) {
+                            const salesStore = db.createObjectStore("sales", { keyPath: "id", autoIncrement: true });
+                            salesStore.createIndex("cryptoId", "cryptoId", { unique: false });
+                        }
+
+                        // Añadir criptomonedas predeterminadas
+                        const transaction = event.target.transaction;
+                        const cryptosStore = transaction.objectStore("cryptos");
+                        const defaultCryptos = ["SOL","BTC","ETH","FTM","XRP","ADA","DOGE","BNB","PEPE","SHIBA","SUI","RAY","THETA","HBAR"];
+                        defaultCryptos.forEach(name => {
+                            cryptosStore.add({ name });
+                        });
+                    };
+                };
+            }
         });
     </script>
 </body>
